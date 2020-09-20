@@ -14,7 +14,7 @@ LEAF(_bcopy)
 	bge a1, v0, goforwards
 	b gobackwards
 
-goforwards:
+GLABEL(goforwards)
 
 	blt a2, 16, forwards_bytecopy
 	
@@ -23,20 +23,20 @@ goforwards:
 	beq v0, v1,forwalignable
 	
 
-forwards_bytecopy:
+GLABEL(forwards_bytecopy)
 	beqz a2, ret
 	addu v1, a0,a2
-99:
+GLABEL(bcopy_loop1)
 	lb v0, 0(a0)
 	addiu a0, a0,1
 	addiu a1, a1,1
 	sb v0, -1(a1)
-	bne a0, v1, 99b
-ret:
+	bne a0, v1, bcopy_loop1
+GLABEL(ret)
 	move v0, a3
 	jr ra
 
-forwalignable:
+GLABEL(forwalignable)
 	beqz v0, forwards
 	beq v0, 1,forw_copy3
 	beq v0, 2,forw_copy2
@@ -48,7 +48,7 @@ forwalignable:
 	sb v0, -1(a1)
 	b forwards
 
-forw_copy2:
+GLABEL(forw_copy2)
 	lh v0, 0(a0)
 	addiu a0, a0,2
 	addiu a1, a1,2
@@ -56,7 +56,7 @@ forw_copy2:
 	sh v0, -2(a1)
 	b forwards
 
-forw_copy3:
+GLABEL(forw_copy3)
 	lb v0, 0(a0)
 	lh v1, 1(a0)
 	addiu a0, a0,3
@@ -65,8 +65,8 @@ forw_copy3:
 	sb v0, -3(a1)
 	sh v1, -2(a1)
 
-forwards:
-forwards_32:
+GLABEL(forwards)
+GLABEL(forwards_32)
 	blt a2, 32, forwards_16
 	lw v0, 0(a0)
 	lw v1, 4(a0)
@@ -89,7 +89,7 @@ forwards_32:
 	sw t5, -4(a1)
 	b forwards_32
 
-forwards_16:
+GLABEL(forwards_16)
 	blt a2, 16, forwards_4
 	lw v0, 0(a0)
 	lw v1, 4(a0)
@@ -104,7 +104,7 @@ forwards_16:
 	sw t1, -4(a1)
 	b forwards_16
 
-forwards_4:
+GLABEL(forwards_4)
 	blt a2, 4, forwards_bytecopy
 	
 	lw v0, 0(a0)
@@ -114,7 +114,7 @@ forwards_4:
 	sw v0, -4(a1)
 	b forwards_4
 	
-gobackwards:
+GLABEL(gobackwards)
 	add a0, a0,a2
 	add a1, a1,a2
 	blt a2, 16, backwards_bytecopy
@@ -123,21 +123,21 @@ gobackwards:
 	andi v1, a1,0x3
 	beq v0, v1,backalignable
 	
-backwards_bytecopy:
+GLABEL(backwards_bytecopy)
 	beqz a2, ret
 	addiu a0, a0,-1
 	addiu a1, a1,-1
 	subu v1, a0,a2
-99:
+GLABEL(bcopy_loop2)
 	lb v0, 0(a0)
 	addiu a0, a0,-1
 	addiu a1, a1,-1
 	sb v0, 1(a1)
-	bne a0, v1,99b
+	bne a0, v1,bcopy_loop2
 
 	move v0, a3
 	jr ra
-backalignable:
+GLABEL(backalignable)
 	beqz v0, backwards
 	beq v0, 3,back_copy3
 	beq v0, 2,back_copy2
@@ -148,7 +148,7 @@ backalignable:
 	sb v0, 0(a1)
 	b backwards
 
-back_copy2:
+GLABEL(back_copy2)
 	lh v0, -2(a0)
 	addiu a0, a0,-2
 	addiu a1, a1,-2
@@ -156,7 +156,7 @@ back_copy2:
 	sh v0, 0(a1)
 	b backwards
 
-back_copy3:
+GLABEL(back_copy3)
 	lb v0, -1(a0)
 	lh v1, -3(a0)
 	addiu a0, a0,-3
@@ -165,8 +165,8 @@ back_copy3:
 	sb v0, 2(a1)
 	sh v1, 0(a1)
 
-backwards:
-backwards_32:
+GLABEL(backwards)
+GLABEL(backwards_32)
 	blt a2, 32, backwards_16
 	#slti AT, a2,16
 	lw v0, -4(a0)
@@ -190,7 +190,7 @@ backwards_32:
 	sw t5, 0(a1)
 	b backwards_32
 
-backwards_16:
+GLABEL(backwards_16)
 	blt a2, 16, backwards_4
 	lw v0, -4(a0)
 	lw v1, -8(a0)
@@ -205,7 +205,7 @@ backwards_16:
 	sw t1, 0(a1)
 	b backwards_16
 
-backwards_4:
+GLABEL(backwards_4)
 	blt a2,4, backwards_bytecopy
 	lw v0, -4(a0)
 	addiu a0, a0,-4
