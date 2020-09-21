@@ -16,13 +16,13 @@ XLEAF(_blkclr)
 	beqz v1, blkzero
 	swl zero, 0(a0)
 	addu a0, a0,v1
-blkzero:
+GLABEL(blkzero)
 	and a3, a1, ~31
 	subu a1, a1,a3
 	beqz a3, wordzero
 
 	addu a3, a3,a0
-1:
+GLABEL(bzero_back_1_1)
 	addiu a0, a0, 32
 	sw zero, -32(a0)
 	sw zero, -28(a0)
@@ -32,27 +32,27 @@ blkzero:
 	sw zero, -12(a0)
 	sw zero, -8(a0)
 	sw zero, -4(a0)
-	bne a0, a3,1b
+	bne a0, a3,bzero_back_1_1
 
-wordzero:
+GLABEL(wordzero)
 	and a3, a1, ~3
 	subu a1, a1,a3
 	beqz a3, bytezero
 
 	addu a3, a3,a0
-1:
+GLABEL(bzero_back_1_2)
 	addiu a0, a0, 4
 	sw zero, -4(a0)
-	bne a0, a3,1b
+	bne a0, a3,bzero_back_1_2
 
-bytezero:
+GLABEL(bytezero)
 	blez a1, zerodone
 	#nop
 	addu a1, a1,a0
-1:
+GLABEL(bzero_back_1_3)
 	addiu a0, a0, 1
 	sb zero, -1(a0)
-	bne a0, a1,1b
-zerodone:
+	bne a0, a1,bzero_back_1_3
+GLABEL(zerodone)
 	jr ra
 END(_bzero)
