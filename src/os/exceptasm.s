@@ -1,7 +1,7 @@
 #include "asm_helper.h"
 #include "exceptasm.h"
 #include <os.h>
-/*  TODO: put this into kirby 64's .data section
+/*  TODO: put this into kirby 64s .data section
 .set gp=64
 
 

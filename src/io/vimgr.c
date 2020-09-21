@@ -3,7 +3,8 @@
 #include "viint.h"
 #include "../os/osint.h"
 
-OSDevMgr __osViDevMgr = {0};
+// OSDevMgr __osViDevMgr = {0};
+extern OSDevMgr __osViDevMgr;
 static OSThread viThread;
 static unsigned char viThreadStack[OS_VIM_STACKSIZE];
 static OSMesgQueue viEventQueue;

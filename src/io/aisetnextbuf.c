@@ -2,9 +2,11 @@
 #include <rcp.h>
 #include "../os/osint.h"
 
+extern u8 hdwrBugFlag;
+
 s32 osAiSetNextBuffer(void *bufPtr, u32 size)
 {
-	static u8 hdwrBugFlag = 0;
+	// static u8 hdwrBugFlag = 0;
 	char *bptr = bufPtr;
 	if (hdwrBugFlag != 0)
 		bptr -= 0x2000;

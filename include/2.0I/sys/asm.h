@@ -62,7 +62,7 @@ x:;							\
 
 #define	GLABEL(x)						\
 	.globl	x;					\
-x:;
+x:
 
 /*
  * XLEAF -- declare alternate entry to leaf routine
