@@ -60,7 +60,7 @@ typedef struct
     /* 0x14 */ OSMesg msg;
     /* 0x18 */ __OSViScale x;
     /* 0x24 */ __OSViScale y;
-} __OSViContext;
+} __OSViContext; // 0x30 bytes
 
 void __osViSwapContext(void);
 extern __OSViContext *__osViCurr;

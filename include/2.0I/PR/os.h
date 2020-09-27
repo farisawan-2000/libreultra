@@ -177,7 +177,7 @@ typedef struct {
 					/* Raw DMA routine */
         s32             (*dma)(s32, u32, void *, u32);
         s32             (*edma)(OSPiHandle *, s32, u32, void *, u32);
-} OSDevMgr;
+} OSDevMgr; // 0x1C
 
 
 /*
@@ -193,7 +193,7 @@ typedef struct {
     u32	hStart;
     u32	xScale;
     u32	vCurrent;
-} OSViCommonRegs;
+} OSViCommonRegs; // 0x24 bytes
 
 
 /*
@@ -205,7 +205,7 @@ typedef struct {
     u32	vStart;	
     u32	vBurst;
     u32	vIntr;
-} OSViFieldRegs;
+} OSViFieldRegs; // 0x14 bytes
 
 
 /*
@@ -215,7 +215,7 @@ typedef struct {
     u8			type;		/* Mode type */
     OSViCommonRegs	comRegs;	/* Common registers for both fields */
     OSViFieldRegs	fldRegs[2];	/* Registers for Field 1  & 2 */
-} OSViMode;
+} OSViMode; // 0x50 bytes
 
 /*
  * Structure for time value 
