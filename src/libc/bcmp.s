@@ -23,22 +23,22 @@ LEAF(_bcmp)
 	addu a1, a1,t8
 	bne v0, v1,cmpne
 
-wordcmp:
+GLABEL(wordcmp)
 	and a3, a2, ~3
 	subu a2, a2,a3
 	beqz a3, bytecmp
 
 	addu a3, a3,a0
-1:
+GLABEL(bcmp_1_1)
 	lw v0, 0(a0)
 	lw v1, 0(a1)
 	addiu a0, a0,4
 	addiu a1, a1,4
 	bne v0, v1,cmpne
-	bne a0, a3, 1b
+	bne a0, a3, bcmp_1_1
 
 	b bytecmp
-unalgncmp:
+GLABEL(unalgncmp)
 	negu a3, a1
 	andi a3, a3,0x3
 	subu a2, a2,a3
@@ -46,46 +46,46 @@ unalgncmp:
 
 	addu a3, a3,a0
 	
-1:
+GLABEL(bcmp_1_2)
 	lbu v0, 0(a0)
 	lbu v1, 0(a1)
 	addiu a0, a0,1
 	addiu a1, a1,1
 	bne v0, v1,cmpne
-	bne a0, a3, 1b 
+	bne a0, a3, bcmp_1_2
 
-partalgncmp:
+GLABEL(partalgncmp)
 	and a3, a2, ~3
 	subu a2, a2,a3
 	beqz a3, bytecmp
 
 	addu a3, a3,a0
 	
-1:
+GLABEL(bcmp_1_3)
 	lwl v0, 0(a0)
 	lw v1, 0(a1)
 	lwr v0, 3(a0)
 	addiu a0, a0,4
 	addiu a1, a1,4
 	bne v0, v1,cmpne
-	bne a0, a3, 1b 
+	bne a0, a3, bcmp_1_3
 	
-bytecmp:
+GLABEL(bytecmp)
 	addu a3, a2,a0
 	blez a2, cmpdone
 
-1:
+GLABEL(bcmp_1_4)
 	lbu v0, 0(a0)
 	lbu v1, 0(a1)
 	addiu a0, a0,1
 	addiu a1, a1,1
 	bne v0, v1,cmpne
-	bne a0, a3, 1b 
+	bne a0, a3, bcmp_1_4
 
-cmpdone:
+GLABEL(cmpdone)
 	move v0, zero
 	jr ra
-cmpne:
+GLABEL(cmpne)
 	li v0, 1
 	jr ra
 	

@@ -116,27 +116,28 @@ typedef struct {
 } __OSBlockInfo;
 
 typedef struct {
-	u32     	cmdType;       	/* for disk only */
-	u16     	transferMode;   /* Block, Track, or sector?   */
-	u16		blockNum;	/* which block is transfering */
-	s32     	sectorNum;      /* which sector is transfering */
-	u32     	devAddr;        /* Device buffer address */
-	u32		bmCtlShadow;	/* asic bm_ctl(510) register shadow ram */
-	u32		seqCtlShadow;	/* asic seq_ctl(518) register shadow ram */
+	/*  0x0  */ u32     	cmdType;       	/* for disk only */
+	/*  0x4  */ u16     	transferMode;   /* Block, Track, or sector?   */
+	/*  0x6  */ u16		blockNum;	/* which block is transfering */
+	/*  0x8  */ s32     	sectorNum;      /* which sector is transfering */
+	/*  0xC  */ u32     	devAddr;        /* Device buffer address */
+	/*  0x10  */ u32		bmCtlShadow;	/* asic bm_ctl(510) register shadow ram */
+	/*  0x14  */ u32		seqCtlShadow;	/* asic seq_ctl(518) register shadow ram */
 	__OSBlockInfo	block[2];	/* bolck transfer info */
 } __OSTranxInfo;
 
 
 typedef struct OSPiHandle_s {
         struct OSPiHandle_s     *next;  /* point to next handle on the table */
-        u8                      type;   /* DEVICE_TYPE_BULK for disk */
-        u8                      latency;        /* domain latency */
-        u8                      pageSize;       /* domain page size */
-        u8                      relDuration;    /* domain release duration */
-        u8                      pulse;          /* domain pulse width */
-	u8			domain;		/* which domain */
-        u32                     baseAddress;    /* Domain address */
-        u32                     speed;          /* for roms only */
+    /* 0x4 */    u8         type;   /* DEVICE_TYPE_BULK for disk */
+    /* 0x5 */    u8         latency;        /* domain latency */
+    /* 0x6 */    u8         pageSize;       /* domain page size */
+    /* 0x7 */    u8         relDuration;    /* domain release duration */
+    /* 0x8 */    u8         pulse;          /* domain pulse width */
+	/* 0x9 */    u8			domain;		/* which domain */
+
+    /* 0xC  */    u32                     baseAddress;    /* Domain address */
+    /* 0x10 */    u32                     speed;          /* for roms only */
         /* The following are "private" elements" */
         __OSTranxInfo           transferInfo;	/* for disk only */
 } OSPiHandle;
