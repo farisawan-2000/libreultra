@@ -9,9 +9,9 @@ u32 __osContinitialized = 0;
 OSPifRam __osContPifRam;
 u8 __osContLastCmd;
 u8 __osMaxControllers;
-OSTimer __osEepromTimer;
-OSMesgQueue __osEepromTimerQ;
-OSMesg __osEepromTimerMsg;
+// OSTimer __osEepromTimer;
+// OSMesgQueue __osEepromTimerQ;
+// OSMesg __osEepromTimerMsg;
 s32 osContInit(OSMesgQueue *mq, u8 *bitpattern, OSContStatus *data)
 {
     OSMesg dummy;
