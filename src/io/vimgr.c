@@ -2,18 +2,18 @@
 #include <rcp.h>
 #include "viint.h"
 #include "../os/osint.h"
-
-// OSDevMgr __osViDevMgr = {0};
-extern OSDevMgr __osViDevMgr;
-static OSThread viThread;
-static unsigned char viThreadStack[OS_VIM_STACKSIZE];
-static OSMesgQueue viEventQueue;
-static OSMesg viEventBuf[5];
-static OSIoMesg viRetraceMsg;
-static OSIoMesg viCounterMsg;
+ 
+OSDevMgr __osViDevMgr = {0};
+// extern OSDevMgr __osViDevMgr;
+OSThread viThread;
+unsigned char viThreadStack[OS_VIM_STACKSIZE];
+OSMesgQueue viEventQueue;
+OSMesg viEventBuf[5];
+OSIoMesg viRetraceMsg;
+OSIoMesg viCounterMsg;
 
 static void viMgrMain(void *arg);
-void osCreateViManager(OSPri pri)
+void _osCreateViManager(OSPri pri)
 {
 	u32 savedMask;
 	OSPri oldPri;
