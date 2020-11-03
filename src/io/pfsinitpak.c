@@ -16,8 +16,7 @@ s32 osPfsInitPak(OSMesgQueue *queue, OSPfs *pfs, int channel)
     pfs->queue = queue;
     pfs->channel = channel;
     pfs->status = 0;
-    pfs->activebank = 0;
-    ERRCK(__osPfsSelectBank(pfs));
+    ERRCK(__osPfsSelectBank(pfs, 0));
     ERRCK(__osContRamRead(pfs->queue, pfs->channel, 1, (u8*)temp));
     __osIdCheckSum((u16*)temp, &sum, &isum);
     id = (__OSPackId *)temp;

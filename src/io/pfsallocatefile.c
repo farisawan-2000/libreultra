@@ -167,15 +167,13 @@ static s32 __osClearPage(OSPfs *pfs, int page_no, u8 *data, u8 bank)
     int i;
     s32 ret;
     ret = 0;
-    pfs->activebank = bank;
-    ERRCK(__osPfsSelectBank(pfs));
+    ERRCK(__osPfsSelectBank(pfs, bank));
     for (i = 0; i < PFS_ONE_PAGE; i++)
     {
         ret = __osContRamWrite(pfs->queue, pfs->channel, page_no * PFS_ONE_PAGE + i, data, FALSE);
         if (ret != 0)
             break;
     }
-    pfs->activebank = 0;
-    ret = __osPfsSelectBank(pfs);
+    ret = __osPfsSelectBank(pfs, 0);
     return ret;
 }
