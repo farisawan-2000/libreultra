@@ -16,7 +16,8 @@ OSTime osClockRate = OS_CLOCK_RATE;
 s32 osViClock = VI_NTSC_CLOCK;
 u32 __osShutdown = 0;
 u32 __OSGlobalIntMask = OS_IM_ALL;
-u32 __osFinalrom;
+// u32 __osFinalrom;
+extern u32 __osFinalrom;
 void osInitialize()
 {
    u32 pifdata;

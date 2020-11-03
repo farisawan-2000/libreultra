@@ -77,8 +77,7 @@ s32 osPfsReadWriteFile(OSPfs *pfs, s32 file_no, u8 flag, int offset, int size_in
         }
         if (pfs->activebank != cur_page.inode_t.bank)
         {
-            pfs->activebank = cur_page.inode_t.bank;
-            ERRCK(__osPfsSelectBank(pfs));
+            ERRCK(__osPfsSelectBank(pfs, cur_page.inode_t.bank));
         }
         blockno = cur_page.inode_t.page * PFS_ONE_PAGE + cur_block;
         if (flag == OS_READ)
@@ -94,8 +93,10 @@ s32 osPfsReadWriteFile(OSPfs *pfs, s32 file_no, u8 flag, int offset, int size_in
     if (flag == PFS_WRITE && (dir.status & DIR_STATUS_OCCUPIED) == 0)
     {
         dir.status |= DIR_STATUS_OCCUPIED;
-        pfs->activebank = 0;
-        ERRCK(__osPfsSelectBank(pfs));
+        if (pfs->activebank)
+        {
+            ERRCK(__osPfsSelectBank(pfs, 0));
+        }
         ERRCK(__osContRamWrite(pfs->queue, pfs->channel, pfs->dir_table + file_no, (u8*)&dir, FALSE));
     }
     return 0;

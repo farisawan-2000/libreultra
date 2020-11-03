@@ -54,8 +54,7 @@ s32 __osRepairPackId(OSPfs *pfs, __OSPackId *badid, __OSPackId *newid)
     newid->serial_low = badid->serial_low;
     for (j = 0; j < PFS_MAX_BANKS;)
     {
-        pfs->activebank = j;
-        ERRCK(__osPfsSelectBank(pfs))
+        ERRCK(__osPfsSelectBank(pfs, j))
         ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, (u8*)&temp)); //TODO: fix magic number
         temp[0] = j | 0x80;
         for (i = 1; i < ARRLEN(temp); i++)
@@ -76,16 +75,14 @@ s32 __osRepairPackId(OSPfs *pfs, __OSPackId *badid, __OSPackId *newid)
             break;
         if (j > 0)
         {
-            pfs->activebank = 0;
-            ERRCK(__osPfsSelectBank(pfs));
+            ERRCK(__osPfsSelectBank(pfs, 0));
             ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, (u8*)temp));
             if (temp[0] != 128)
                 break; //TODO: remove magic constant
         }
         j++;
     }
-    pfs->activebank = 0;
-    ERRCK(__osPfsSelectBank(pfs));
+    ERRCK(__osPfsSelectBank(pfs, 0));
     if (j > 0)
         mask = 1;
     else
@@ -283,7 +280,7 @@ s32 __osPfsRWInode(OSPfs *pfs, __OSInode *inode, u8 flag, u8 bank)
     return 0;
 }
 
-s32 __osPfsSelectBank(OSPfs *pfs)
+s32 __osPfsSelectBank(OSPfs *pfs, u32 bank)
 {
     u8 temp[BLOCKSIZE];
     int i;
@@ -291,7 +288,7 @@ s32 __osPfsSelectBank(OSPfs *pfs)
     ret = 0;
     for (i = 0; i < ARRLEN(temp); i++)
     {
-        temp[i] = pfs->activebank;
+        temp[i] = bank;
     }
     ret = __osContRamWrite(pfs->queue, pfs->channel, 1024, (u8*)temp, FALSE);
     return ret;

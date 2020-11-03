@@ -5,12 +5,11 @@
 
 #define HALF_A_SECOND OS_USEC_TO_CYCLES(500000)
 
-// u32 __osContinitialized = 0;
 // OSPifRam __osContPifRam;
 // u8 __osContLastCmd;
 // u8 __osMaxControllers;
 
-extern u32 __osContinitialized;
+u32 __osContinitialized = 0;
 extern OSPifRam __osContPifRam;
 extern u8 __osContLastCmd;
 extern u8 __osMaxControllers;

@@ -111,20 +111,17 @@ s32 __osBlockSum(OSPfs *pfs, u8 page_no, u16 *sum, u8 bank)
     s32 ret;
     u8 data[32];
     ret = 0;
-    pfs->activebank = bank;
-    ERRCK(__osPfsSelectBank(pfs));
+    ERRCK(__osPfsSelectBank(pfs, bank));
     for (i = 0; i < PFS_ONE_PAGE; i++)
     {
         ret = __osContRamRead(pfs->queue, pfs->channel, page_no * PFS_ONE_PAGE + i, data);
         if (ret != 0)
         {
-            pfs->activebank = 0;
-            __osPfsSelectBank(pfs);
+            __osPfsSelectBank(pfs, 0);
             return ret;
         }
         *sum = *sum + __osSumcalc(data, sizeof(data));
     }
-    pfs->activebank = 0;
-    ret = __osPfsSelectBank(pfs);
+    ret = __osPfsSelectBank(pfs, 0);
     return ret;
 }
