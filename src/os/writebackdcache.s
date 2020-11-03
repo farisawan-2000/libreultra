@@ -15,18 +15,18 @@ LEAF(osWritebackDCache)
 	andi t2, t0, DCACHE_LINEMASK
 	addiu t1, t1, -DCACHE_LINESIZE
 	subu t0, t0,t2
-L_38:
+GLABEL(L_38)
     cache (C_HWB|CACH_PD), (t0)
 	bltu t0, t1, L_38
 	addiu t0, t0,16
-L_48:
+GLABEL(L_48)
 	jr ra
 	nop
-L_50:
+GLABEL(L_50)
 	li t0, KUSIZE
 	addu t1, t0,t3
 	addiu t1, t1, -DCACHE_LINESIZE
-L_5c:
+GLABEL(L_5c)
     cache (C_IWBINV|CACH_PD), (t0)
 	bltu t0, t1, L_5c
 	addiu t0, t0, DCACHE_LINESIZE
