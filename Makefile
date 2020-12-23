@@ -34,6 +34,7 @@ BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)
 
 # Directories containing source files
 SRC_DIRS := src src/audio src/gt src/gu src/io src/libc src/os src/rg src/sched src/sp
+LIBNAUDIO_SRC_DIRS := src/libnaudio
 #ASM_DIRS := asm lib
 #BIN_DIRS := bin bin/$(VERSION)
 
@@ -49,16 +50,19 @@ MIPSISET := -mips2 -32
 OPT_FLAGS := -O1
 
 C_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
+LIBNAUDIO_C_FILES := $(foreach dir,$(LIBNAUDIO_SRC_DIRS),$(wildcard $(dir)/*.c))
 S_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.s))
 
 # Object files
 O_FILES := $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file:.c=.o)) \
-           $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) 
+					 $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) 
+
+LIBNAUDIO_O_FILES := $(foreach file,$(LIBNAUDIO_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
 
 # Automatic dependency files
 DEP_FILES := $(O_FILES:.o=.d)
 
-ALL_DIRS := $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(SRC_DIRS)) 
+ALL_DIRS := $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(SRC_DIRS) $(LIBNAUDIO_SRC_DIRS)) 
 
 # Make sure build directory exists before compiling anything
 DUMMY != mkdir -p $(ALL_DIRS)
@@ -67,17 +71,17 @@ DUMMY != mkdir -p $(ALL_DIRS)
 IRIX_ROOT := tools/ido
 
 ifeq ($(shell type mips-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
-  CROSS := mips-linux-gnu-
+	CROSS := mips-linux-gnu-
 else
-  CROSS := mips64-elf-
+	CROSS := mips64-elf-
 endif
 
 # check that either QEMU_IRIX is set or qemu-irix package installed
 ifndef QEMU_IRIX
-  QEMU_IRIX := $(shell which qemu-irix)
-  ifeq (, $(QEMU_IRIX))
-    $(error Please install qemu-irix package or set QEMU_IRIX env var to the full qemu-irix binary path)
-  endif
+	QEMU_IRIX := $(shell which qemu-irix)
+	ifeq (, $(QEMU_IRIX))
+		$(error Please install qemu-irix package or set QEMU_IRIX env var to the full qemu-irix binary path)
+	endif
 endif
 
 AS        := $(QEMU_IRIX) -silent -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/as
@@ -110,14 +114,15 @@ $(BUILD_DIR)/src/io/contreaddata.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/sirawdma.o: OPT_FLAGS := -O2 -O2
 $(BUILD_DIR)/src/io/pfsreadwritefile.o: OPT_FLAGS := -O2
 
-
+# libnaudio
+$(BUILD_DIR)/src/libnaudio/%.o: OPT_FLAGS := -mips2 -O3
 
 #ifeq ($(TARGET_N64),1)
-  TARGET_CFLAGS := -nostdinc -I include/2.0I -I include/2.0I/PR -DTARGET_N64 -D_FINALROM -DF3DEX_GBI -DNDEBUG
-  CC_CFLAGS := -fno-builtin
+	TARGET_CFLAGS := -nostdinc -I include/2.0I -I include/2.0I/PR -DTARGET_N64 -D_FINALROM -DF3DEX_GBI -DNDEBUG
+	CC_CFLAGS := -fno-builtin
 #endif
 
-INCLUDE_CFLAGS := -I include/2.0I -I include/2.0I/PR
+INCLUDE_CFLAGS := -I include/2.0I -I include/2.0I/PR -I src/
 
 # Check code syntax with host compiler
 CC_CHECK := gcc -fsyntax-only $(CC_CFLAGS) $(TARGET_CFLAGS) $(INCLUDE_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -DNON_MATCHING -DAVOID_UB $(VERSION_CFLAGS) $(GRUCODE_CFLAGS) -D_LANGUAGE_C -D_MIPS_SZINT=32 -D_MIPS_SZLONG=32
@@ -129,11 +134,11 @@ LDFLAGS := -T undefined_syms.txt -T $(BUILD_DIR)/$(LD_SCRIPT) -Map $(BUILD_DIR)/
 ENDIAN_BITWIDTH := $(BUILD_DIR)/endian-and-bitwidth
 
 ifeq ($(shell getconf LONG_BIT), 32)
-  # Work around memory allocation bug in QEMU
-  export QEMU_GUEST_BASE := 1
+	# Work around memory allocation bug in QEMU
+	export QEMU_GUEST_BASE := 1
 else
-  # Ensure that gcc treats the code as 32-bit
-  CC_CHECK += -m32
+	# Ensure that gcc treats the code as 32-bit
+	CC_CHECK += -m32
 endif
 
 ####################### Other Tools #########################
@@ -175,9 +180,14 @@ $(BUILD_DIR)/%.o: %.s
 $(BUILD_DIR)/libultra_rom.a: $(O_FILES)
 	$(AR) rcs -o $@ $(O_FILES)
 
+$(BUILD_DIR)/libn_audio.a: $(LIBNAUDIO_O_FILES)
+	$(AR) rcs -o $@ $(LIBNAUDIO_O_FILES)
+
 #$(BUILD_DIR)/libultra.a: $(O_FILES)
-  #$(LD) $()
+	#$(LD) $()
 default: $(BUILD_DIR)/libultra_rom.a
+
+naudio: $(BUILD_DIR)/libn_audio.a
 
 
 
