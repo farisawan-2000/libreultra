@@ -83,6 +83,7 @@ GLABEL(forwards_32)
 	sw v1, -28(a1)
 	sw t0, -24(a1)
 	sw t1, -20(a1)
+GLABEL(bcopy2) /* why? */
 	sw t2, -16(a1)
 	sw t3, -12(a1)
 	sw t4, -8(a1)

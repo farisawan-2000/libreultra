@@ -12,25 +12,17 @@ u16 __osSumcalc(u8 *ptr, int length)
     for (i = 0; i < length; i++)
     {
         sum += *tmp++;
-        sum &= 0xffff;
     }
-    return sum;
+    return sum & 0xFFFF;
 }
 s32 __osIdCheckSum(u16 *ptr, u16 *csum, u16 *icsum)
 {
-    u16 data;
-    u32 j;
-    data = 0;
-    *icsum = 0;
-    *csum = *icsum;
-    for (j = 0; j < 28; j += 2)
+    int j;
+    *csum = *icsum = 0;
+    for (j = 0; j < 14; j++)
     {
-        //feels like this should be a compiler optimization not manual..
-        //but it doesn't match and I'm pretty sure this is just -O1
-        data = *(u16 *)((u8 *)ptr + j);
-        //data = ptr[j]
-        *csum += data;
-        *icsum += ~data;
+        *csum += ptr[j];
+        *icsum += ~ptr[j];
     }
     return 0;
 }
@@ -42,17 +34,17 @@ s32 __osRepairPackId(OSPfs *pfs, __OSPackId *badid, __OSPackId *newid)
     u8 comp[32];
     u8 mask;
     int i;
-    int j;
+    int j = 0;
     u16 index[4];
 
     ret = 0;
     mask = 0;
-    SET_ACTIVEBANK_TO_ZERO;
     newid->repaired = -1;
     newid->random = osGetCount();
     newid->serial_mid = badid->serial_mid;
     newid->serial_low = badid->serial_low;
-    for (j = 0; j < PFS_MAX_BANKS;)
+    SET_ACTIVEBANK_TO_ZERO;
+    for (j = 0; j < PFS_MAX_BANKS;j++)
     {
         ERRCK(__osPfsSelectBank(pfs, j))
         ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, (u8*)&temp)); //TODO: fix magic number
@@ -80,9 +72,8 @@ s32 __osRepairPackId(OSPfs *pfs, __OSPackId *badid, __OSPackId *newid)
             if (temp[0] != 128)
                 break; //TODO: remove magic constant
         }
-        j++;
     }
-    ERRCK(__osPfsSelectBank(pfs, 0));
+    SET_ACTIVEBANK_TO_ZERO;
     if (j > 0)
         mask = 1;
     else
@@ -143,20 +134,22 @@ s32 __osCheckPackId(OSPfs *pfs, __OSPackId *temp)
     return 0;
 }
 
+void bcopy2(const void *, void *, int);
+
 s32 __osGetId(OSPfs *pfs)
 {
-    int k;
     u16 sum;
     u16 isum;
-    u8 temp[32];
-    __OSPackId newid;
-    s32 ret;
     __OSPackId *id;
+    __OSPackId temp;
+    __OSPackId newid;
+    u32 i;
+    u32 ret;
 
     SET_ACTIVEBANK_TO_ZERO;
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, 1, (u8*)temp));
-    __osIdCheckSum((u16*)temp, &sum, &isum);
-    id = (__OSPackId*)temp;
+    ERRCK(__osContRamRead(pfs->queue, pfs->channel, 1, (u8*)&temp));
+    __osIdCheckSum((u16*)&temp, &sum, &isum);
+    id = &temp;
     if (id->checksum != sum || id->inverted_checksum != isum)
     {
         ret = __osCheckPackId(pfs, id);
@@ -177,10 +170,7 @@ s32 __osGetId(OSPfs *pfs)
         if ((id->deviceid & 1) == 0)
             return PFS_ERR_DEVICE;
     }
-    for (k = 0; k < ARRLEN(pfs->id); k++)
-    {
-        pfs->id[k] = ((u8 *)id)[k];
-    }
+    bcopy2(id, pfs->id, ARRLEN(pfs->id));
     pfs->version = id->version;
     pfs->banks = id->banks;
     pfs->inode_start_page = pfs->banks * 2 + 3; //TODO: loads of magic constants..
@@ -278,18 +268,4 @@ s32 __osPfsRWInode(OSPfs *pfs, __OSInode *inode, u8 flag, u8 bank)
         }
     }
     return 0;
-}
-
-s32 __osPfsSelectBank(OSPfs *pfs, u32 bank)
-{
-    u8 temp[BLOCKSIZE];
-    int i;
-    s32 ret;
-    ret = 0;
-    for (i = 0; i < ARRLEN(temp); i++)
-    {
-        temp[i] = bank;
-    }
-    ret = __osContRamWrite(pfs->queue, pfs->channel, 1024, (u8*)temp, FALSE);
-    return ret;
 }

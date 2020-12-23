@@ -1,9 +1,11 @@
 #include <os_internal.h>
 #include "piint.h"
 
+extern OSPiHandle CartRomHandle2;
+
 OSDevMgr __osPiDevMgr = {0};
 OSPiHandle *__osPiTable = NULL;
-OSPiHandle *__osCurrentHandle[2] = {&CartRomHandle, &LeoDiskHandle};
+OSPiHandle *__osCurrentHandle[2] = {&CartRomHandle2, &LeoDiskHandle};
 static OSThread piThread;
 static char piThreadStack[OS_PIM_STACKSIZE];
 #ifdef _DEBUG
@@ -16,6 +18,7 @@ static OSMesg freeRamromBuf[1];
 #endif
 static OSMesgQueue piEventQueue;
 static OSMesg piEventBuf[1];
+static void func_800323FC(void);
 void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgCnt)
 {
 	u32 savedMask;
@@ -23,6 +26,7 @@ void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgC
 	OSPri myPri;
 	if (!__osPiDevMgr.active)
 	{
+		func_800323FC();
 		osCreateMesgQueue(cmdQ, cmdBuf, cmdMsgCnt);
 		osCreateMesgQueue(&piEventQueue, (OSMesg*)&piEventBuf, 1);
 		if (!__osPiAccessQueueEnabled)
@@ -51,4 +55,17 @@ void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgC
 			osSetThreadPri(NULL, oldPri);
 		}
 	}
+}
+static void func_800323FC()
+{
+	CartRomHandle2.latency			= IO_READ(PI_BSD_DOM1_LAT_REG);
+	CartRomHandle2.pulse			= IO_READ(PI_BSD_DOM1_PWD_REG);
+	CartRomHandle2.pageSize			= IO_READ(PI_BSD_DOM1_PGS_REG);
+	CartRomHandle2.relDuration		= IO_READ(PI_BSD_DOM1_RLS_REG);
+	CartRomHandle2.domain			= 0;
+	LeoDiskHandle.latency			= IO_READ(PI_BSD_DOM2_LAT_REG);
+	LeoDiskHandle.pulse				= IO_READ(PI_BSD_DOM2_PWD_REG);
+	LeoDiskHandle.pageSize			= IO_READ(PI_BSD_DOM2_PGS_REG);
+	LeoDiskHandle.relDuration		= IO_READ(PI_BSD_DOM2_RLS_REG);
+	LeoDiskHandle.domain			= 1;
 }

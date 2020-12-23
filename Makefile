@@ -113,6 +113,10 @@ $(BUILD_DIR)/src/os/exceptasm.o: MIPSISET := -mips3 -o32
 $(BUILD_DIR)/src/io/contreaddata.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/sirawdma.o: OPT_FLAGS := -O2 -O2
 $(BUILD_DIR)/src/io/pfsreadwritefile.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/pimgr.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/pfssearchfile.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/conteepprobe.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/contpfs.o: OPT_FLAGS := -O2
 
 # libnaudio
 $(BUILD_DIR)/src/libnaudio/%.o: OPT_FLAGS := -mips2 -O3
