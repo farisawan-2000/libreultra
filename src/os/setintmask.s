@@ -15,7 +15,7 @@
 #define CLR_DP 0x0400
 #define SET_DP 0x0800
 
-EXPORT(__osRcpImTable)
+GLABEL(__osRcpImTable)
 /* LUT to convert between MI_INTR and MI_INTR_MASK */
 /* MI_INTR is status for each interrupt whereas    */
 /* MI_INTR_MASK has seperate bits for set/clr      */
@@ -98,13 +98,13 @@ LEAF(osSetIntMask)
 	or v0, v0,t0
 
 	lw t2, PHYS_TO_K1(MI_INTR_MASK_REG)
-	beqz t2, 1f
+	beqz t2, setintmask_1
 	srl t1, t3,0x10
 
 	xor t1, t1,-1
 	andi t1, t1, MI_INTR_MASK
 	or t2, t2,t1
-1:
+GLABEL(setintmask_1)
 	sll t2, t2,0x10
 	or v0, v0,t2
 
