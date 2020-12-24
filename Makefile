@@ -84,9 +84,10 @@ ifndef QEMU_IRIX
 	endif
 endif
 
+# AS        := tools/ido-5.3recomp/ido5.3_recomp/as
 AS        := $(QEMU_IRIX) -silent -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/as
 #AS		  := $(CROSS)as
-CC        := $(QEMU_IRIX) -silent -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/cc
+CC        := tools/ido-5.3recomp/ido5.3_recomp/cc
 #AR        := $(QEMU_IRIX) -silent -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/ar
 CPP       := cpp -P
 LD        := $(CROSS)ld
