@@ -120,6 +120,7 @@ $(BUILD_DIR)/src/io/contpfs.o: OPT_FLAGS := -O2
 
 # libnaudio
 $(BUILD_DIR)/src/libnaudio/%.o: OPT_FLAGS := -mips2 -O3
+$(BUILD_DIR)/src/libnaudio/%.o: CC := tools/ido-5.3recomp/ido5.3_recomp/cc
 
 #ifeq ($(TARGET_N64),1)
 	TARGET_CFLAGS := -nostdinc -I include/2.0I -I include/2.0I/PR -DTARGET_N64 -D_FINALROM -DF3DEX_GBI -DNDEBUG
