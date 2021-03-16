@@ -1,6 +1,6 @@
 #include <os_internal.h>
 #include <sptask.h>
 
-void osAfterPreNMI(void) {
-	__osSpSetPc(0);
+s32 osAfterPreNMI(void) {
+	return __osSpSetPc(0);
 }
