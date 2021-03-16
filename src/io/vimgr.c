@@ -12,8 +12,10 @@ OSMesg viEventBuf[5];
 OSIoMesg viRetraceMsg;
 OSIoMesg viCounterMsg;
 
+extern u32 D_8003FE6C;
+
 static void viMgrMain(void *arg);
-void _osCreateViManager(OSPri pri)
+void osCreateViManager(OSPri pri)
 {
 	u32 savedMask;
 	OSPri oldPri;
@@ -21,6 +23,7 @@ void _osCreateViManager(OSPri pri)
 	if (__osViDevMgr.active == 0)
 	{
 		__osTimerServicesInit();
+		D_8003FE6C = 0;
 		osCreateMesgQueue(&viEventQueue, viEventBuf, 5);
 		viRetraceMsg.hdr.type = OS_MESG_TYPE_VRETRACE;
 		viRetraceMsg.hdr.pri = OS_MESG_PRI_NORMAL;

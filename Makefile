@@ -119,6 +119,7 @@ $(BUILD_DIR)/src/io/pfssearchfile.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/conteepprobe.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/contpfs.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/viswapcontext.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/vimgr.o: OPT_FLAGS := -O2
 
 # libnaudio
 $(BUILD_DIR)/src/libnaudio/%.o: OPT_FLAGS := -mips2 -O3
