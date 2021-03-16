@@ -117,6 +117,7 @@ $(BUILD_DIR)/src/io/pfsreadwritefile.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/pimgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/pfssearchfile.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/conteepprobe.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/conteepread.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/contpfs.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/viswapcontext.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/vimgr.o: OPT_FLAGS := -O2
