@@ -2,12 +2,14 @@
 #include <rcp.h>
 #include "viint.h"
 
+extern u32 D_8003FE6C;
 void __osViSwapContext()
 {
     register OSViMode *vm;
     register __OSViContext *vc;
     u32 origin;
     u32 hStart;
+    u32 vStart;
     u32 nomValue;
     u32 field;
 
@@ -36,6 +38,7 @@ void __osViSwapContext()
     {
         vc->y.scale = vm->fldRegs[field].yScale;
     }
+    vStart = (vm->fldRegs[field].vStart - (D_8003FE6C << 0x10)) + D_8003FE6C;
     hStart = vm->comRegs.hStart;
     if (vc->state & VI_STATE_BLACK)
     {
@@ -58,7 +61,7 @@ void __osViSwapContext()
     IO_WRITE(VI_H_SYNC_REG, vm->comRegs.hSync);
     IO_WRITE(VI_LEAP_REG, vm->comRegs.leap);
     IO_WRITE(VI_H_START_REG, hStart);
-    IO_WRITE(VI_V_START_REG, vm->fldRegs[field].vStart);
+    IO_WRITE(VI_V_START_REG, vStart);
     IO_WRITE(VI_V_BURST_REG, vm->fldRegs[field].vBurst);
     IO_WRITE(VI_INTR_REG, vm->fldRegs[field].vIntr);
     IO_WRITE(VI_X_SCALE_REG, vc->x.scale);
