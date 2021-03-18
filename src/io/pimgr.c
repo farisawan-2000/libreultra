@@ -2,10 +2,11 @@
 #include "piint.h"
 
 extern OSPiHandle CartRomHandle2;
+extern OSPiHandle LeoDiskHandle80098E78;
 
 OSDevMgr __osPiDevMgr = {0};
 OSPiHandle *__osPiTable = NULL;
-OSPiHandle *__osCurrentHandle[2] = {&CartRomHandle2, &LeoDiskHandle};
+OSPiHandle *__osCurrentHandle[2] = {&CartRomHandle2, &LeoDiskHandle80098E78};
 static OSThread piThread;
 static char piThreadStack[OS_PIM_STACKSIZE];
 #ifdef _DEBUG
@@ -63,9 +64,9 @@ static void func_800323FC()
 	CartRomHandle2.pageSize			= IO_READ(PI_BSD_DOM1_PGS_REG);
 	CartRomHandle2.relDuration		= IO_READ(PI_BSD_DOM1_RLS_REG);
 	CartRomHandle2.domain			= 0;
-	LeoDiskHandle.latency			= IO_READ(PI_BSD_DOM2_LAT_REG);
-	LeoDiskHandle.pulse				= IO_READ(PI_BSD_DOM2_PWD_REG);
-	LeoDiskHandle.pageSize			= IO_READ(PI_BSD_DOM2_PGS_REG);
-	LeoDiskHandle.relDuration		= IO_READ(PI_BSD_DOM2_RLS_REG);
-	LeoDiskHandle.domain			= 1;
+	LeoDiskHandle80098E78.latency			= IO_READ(PI_BSD_DOM2_LAT_REG);
+	LeoDiskHandle80098E78.pulse				= IO_READ(PI_BSD_DOM2_PWD_REG);
+	LeoDiskHandle80098E78.pageSize			= IO_READ(PI_BSD_DOM2_PGS_REG);
+	LeoDiskHandle80098E78.relDuration		= IO_READ(PI_BSD_DOM2_RLS_REG);
+	LeoDiskHandle80098E78.domain			= 1;
 }
