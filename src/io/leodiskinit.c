@@ -14,10 +14,11 @@ OSPiHandle *osLeoDiskInit()
 	LeoDiskHandle.pageSize = 6;
 	LeoDiskHandle.relDuration = 2;
 	LeoDiskHandle.domain = PI_DOMAIN2;
-	IO_WRITE(PI_BSD_DOM2_LAT_REG, LeoDiskHandle.latency);
-	IO_WRITE(PI_BSD_DOM2_PWD_REG, LeoDiskHandle.pulse);
-	IO_WRITE(PI_BSD_DOM2_PGS_REG, LeoDiskHandle.pageSize);
-	IO_WRITE(PI_BSD_DOM2_RLS_REG, LeoDiskHandle.relDuration);
+	// removed in kirby 64's version of DiskInit
+	// IO_WRITE(PI_BSD_DOM2_LAT_REG, LeoDiskHandle.latency);
+	// IO_WRITE(PI_BSD_DOM2_PWD_REG, LeoDiskHandle.pulse);
+	// IO_WRITE(PI_BSD_DOM2_PGS_REG, LeoDiskHandle.pageSize);
+	// IO_WRITE(PI_BSD_DOM2_RLS_REG, LeoDiskHandle.relDuration);
 	LeoDiskHandle.speed = 0;
 	bzero(&LeoDiskHandle.transferInfo, sizeof(__OSTranxInfo));
 	saveMask = __osDisableInt();
