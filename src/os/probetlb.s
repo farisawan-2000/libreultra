@@ -30,9 +30,9 @@ LEAF(__osProbeTLB)
 	mfc0 v0, C0_ENTRYLO0
 	b L_7c
 	nop
-L_78:
+GLABEL(L_78)
 	mfc0 v0, C0_ENTRYLO1
-L_7c:
+GLABEL(L_7c)
 	andi t5, v0,TLBLO_V
 	beqz t5, L_a8
 	nop
@@ -42,9 +42,9 @@ L_7c:
 	add v0, v0,t5
 	b L_ac
 	nop
-L_a8:
+GLABEL(L_a8)
 	li v0, -1
-L_ac:
+GLABEL(L_ac)
 	mtc0 t0, C0_ENTRYHI
 	jr ra
 	nop	

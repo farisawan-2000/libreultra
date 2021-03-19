@@ -10,9 +10,14 @@ s32 osPfsFreeBlocks(OSPfs *pfs, s32 *bytes_not_used)
     u8 bank;
     int offset;
     pages = 0;
-    ret = 0;
     PFS_CHECK_STATUS;
-    PFS_CHECK_ID;
+
+    // PFS_CHECK_ID was changed to this catch-all error thrower
+    ret = __osCheckId(pfs);
+    if (ret != 0) {
+        return ret;
+    } 
+
     for (bank = 0; bank < pfs->banks; bank++)
     {
         ERRCK(__osPfsRWInode(pfs, &inode, OS_READ, bank));
@@ -31,4 +36,5 @@ s32 osPfsFreeBlocks(OSPfs *pfs, s32 *bytes_not_used)
 }
 
 /*
+
 */
