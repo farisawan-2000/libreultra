@@ -177,3 +177,4 @@ static s32 __osClearPage(OSPfs *pfs, int page_no, u8 *data, u8 bank)
     ret = __osPfsSelectBank(pfs, 0);
     return ret;
 }
+

@@ -12,11 +12,8 @@ s32 osPfsFreeBlocks(OSPfs *pfs, s32 *bytes_not_used)
     pages = 0;
     PFS_CHECK_STATUS;
 
-    // PFS_CHECK_ID was changed to this catch-all error thrower
-    ret = __osCheckId(pfs);
-    if (ret != 0) {
-        return ret;
-    } 
+    // PFS_CHECK_ID was changed to this ERRCK
+    ERRCK(__osCheckId(pfs));
 
     for (bank = 0; bank < pfs->banks; bank++)
     {
