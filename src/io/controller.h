@@ -138,6 +138,28 @@ typedef struct
 #define DIR_STATUS_UNKNOWN 1
 #define DIR_STATUS_OCCUPIED 2
 
+// Accesory detection
+#define CONT_ADDR_DETECT    0x8000
+// Rumble
+#define CONT_ADDR_RUMBLE    0xC000
+// Controller Pak
+// Transfer Pak
+#define CONT_ADDR_GB_POWER  0x8000 // Same as the detection address, but semantically different
+#define CONT_ADDR_GB_BANK   0xA000
+#define CONT_ADDR_GB_STATUS 0xB000
+
+// Addresses sent to controller accessories are in blocks, not bytes
+#define CONT_BLOCKS(x) ((x) / BLOCKSIZE)
+
+// Block addresses of the above
+#define CONT_BLOCK_DETECT    CONT_BLOCKS(CONT_ADDR_DETECT)
+#define CONT_BLOCK_RUMBLE    CONT_BLOCKS(CONT_ADDR_RUMBLE)
+#define CONT_BLOCK_GB_POWER  CONT_BLOCKS(CONT_ADDR_GB_POWER)
+#define CONT_BLOCK_GB_BANK   CONT_BLOCKS(CONT_ADDR_GB_BANK)
+#define CONT_BLOCK_GB_STATUS CONT_BLOCKS(CONT_ADDR_GB_STATUS)
+
+
+
 
 typedef struct
 {
