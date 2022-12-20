@@ -73,29 +73,12 @@ typedef struct OSThread_s {
 	__OSThreadContext	context;	/* register/interrupt mask */
 } OSThread;
 
-typedef u32 OSEvent;
 typedef u32 OSIntMask;
 typedef u32 OSPageMask;
 typedef u32 OSHWIntr;
 
-/*
- * Structure for message
- */
-typedef void *	OSMesg;
 
-/*
- * Structure for message queue
- */
-typedef struct OSMesgQueue_s {
-	OSThread	*mtqueue;	/* Queue to store threads blocked
-					   on empty mailboxes (receive) */
-	OSThread	*fullqueue;	/* Queue to store threads blocked
-					   on full mailboxes (send) */
-	s32		validCount;	/* Contains number of valid message */
-	s32		first;		/* Points to first valid message */
-	s32		msgCount;	/* Contains total # of messages */
-	OSMesg		*msg;		/* Points to message buffer array */
-} OSMesgQueue;
+#include <os_message.h>
 
 /*
  * Structure for Enhanced PI interface
@@ -265,33 +248,8 @@ typedef struct {
  * Structure for file system
  */
 
+#include <os_pfs.h>
 
-
-typedef struct {
-	int		status;
-	OSMesgQueue 	*queue;
-	int		channel;
-	u8		id[32];
-	u8		label[32];
-	int		version;
-	int		dir_size;
-	int		inode_table;		/* block location */
-	int		minode_table;		/* mirrioring inode_table */
-	int		dir_table;		/* block location */
-	int		inode_start_page;	/* page # */
-	u8		banks;
-	u8		activebank;
-} OSPfs;
-
-
-typedef struct {
-	u32	file_size;	/* bytes */
-  	u32 	game_code;
-  	u16 	company_code;
-  	char  	ext_name[4];
-  	char 	game_name[16];
-} OSPfsState;
-	
 /*
  * Structure for Profiler 
  */
@@ -907,24 +865,6 @@ extern s32		osContSetCh(u8);
 #endif
 extern void		osContGetQuery(OSContStatus *);
 extern void		osContGetReadData(OSContPad *);
-
-/* file system interface */
-
-extern s32 osPfsInitPak(OSMesgQueue *, OSPfs *, int);
-extern s32 osPfsRepairId(OSPfs *);
-extern s32 osPfsInit(OSMesgQueue *, OSPfs *, int);
-extern s32 osPfsReFormat(OSPfs *, OSMesgQueue *, int);
-extern s32 osPfsChecker(OSPfs *);
-extern s32 osPfsAllocateFile(OSPfs *, u16, u32, u8 *, u8 *, int, s32 *);
-extern s32 osPfsFindFile(OSPfs *, u16, u32, u8 *, u8 *, s32 *);
-extern s32 osPfsDeleteFile(OSPfs *, u16, u32, u8 *, u8 *);
-extern s32 osPfsReadWriteFile(OSPfs *, s32, u8, int, int, u8 *);
-extern s32 osPfsFileState(OSPfs *, s32, OSPfsState *);
-extern s32 osPfsGetLabel(OSPfs *, u8 *, int *);
-extern s32 osPfsSetLabel(OSPfs *, u8 *);
-extern s32 osPfsIsPlug(OSMesgQueue *, u8 *);
-extern s32 osPfsFreeBlocks(OSPfs *, s32 *);
-extern s32 osPfsNumFiles(OSPfs *, s32 *, s32 *);
 
 /* EEPROM interface */
 
