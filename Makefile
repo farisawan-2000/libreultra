@@ -122,6 +122,7 @@ $(BUILD_DIR)/src/io/contpfs.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/viswapcontext.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/vimgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/leodiskinit.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/leointerrupt.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/pfsfreeblocks.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/pfsallocatefile.o: OPT_FLAGS := -O3
 

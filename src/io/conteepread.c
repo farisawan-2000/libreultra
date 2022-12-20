@@ -4,9 +4,9 @@
 
 static void __osPackEepReadData(u8 address);
 OSPifRam __osEepPifRam;
-s32 _osEepromRead(OSMesgQueue* arg0, u8 address, u8* buffer) {
-    s32 ret;
-    s32 i;
+s32 osEepromRead(OSMesgQueue* arg0, u8 address, u8* buffer) {
+    s32 ret = 0;
+    s32 i = 0;
     u16 type;
     u8 *ptr;
     OSContStatus sdata;
@@ -17,7 +17,7 @@ s32 _osEepromRead(OSMesgQueue* arg0, u8 address, u8* buffer) {
     ret = __osEepStatus(arg0, &sdata);
     if (ret == 0) {
         type = sdata.type & 0xC000;
-
+        
         switch (type) {
             case 0x8000:
                 if (address >= 0x40) {
@@ -32,11 +32,12 @@ s32 _osEepromRead(OSMesgQueue* arg0, u8 address, u8* buffer) {
             default:
                 ret = 8;
                 break;
-            
         }
     }
+    
     if (ret != 0) {
         __osSiRelAccess();
+        return ret;
     } else {
         while (sdata.status & 0x80) {
             __osEepStatus(arg0, &sdata);
@@ -59,8 +60,8 @@ s32 _osEepromRead(OSMesgQueue* arg0, u8 address, u8* buffer) {
     		}
     	}
         __osSiRelAccess();
+        return ret;
     }
-    return ret;
 }
 
 static void __osPackEepReadData(u8 address) {
@@ -77,6 +78,7 @@ static void __osPackEepReadData(u8 address) {
     for (i = 0; i < MAXCONTROLLERS; i++) {
         *ptr++ = 0;
     }
-    *(__OSContEepromFormat *)(ptr) = eepromformat;
+    ptr += sizeof(__OSContEepromFormat);
+    *(__OSContEepromFormat *)(ptr - sizeof(__OSContEepromFormat)) = eepromformat;
     ptr[0] = CONT_CMD_END;
 }
