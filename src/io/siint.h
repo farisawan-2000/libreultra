@@ -7,4 +7,6 @@ void __osSiGetAccess(void);
 void __osSiRelAccess(void);
 int __osSiDeviceBusy(void);
 void __osSiCreateAccessQueue(void);
+
+extern u8 __osPfsInodeCacheBank;
 #endif

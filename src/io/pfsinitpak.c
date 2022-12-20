@@ -2,50 +2,74 @@
 #include "controller.h"
 #include "siint.h"
 
-s32 osPfsInitPak(OSMesgQueue *queue, OSPfs *pfs, int channel)
-{
-    int k;
+s32 osPfsInitPak(OSMesgQueue* queue, OSPfs* pfs, int channel) {
     s32 ret;
     u16 sum;
     u16 isum;
-    u8 temp[32];
-    __OSPackId *id;
+    u8 temp[BLOCKSIZE];
+    __OSPackId* id;
     __OSPackId newid;
-    ret = 0;
-    PFS_GET_STATUS;
+
+    __osSiGetAccess();
+
+    ret = __osPfsGetStatus(queue, channel);
+
+    __osSiRelAccess();
+
+    if (ret != 0) {
+        return ret;
+    }
+
     pfs->queue = queue;
     pfs->channel = channel;
     pfs->status = 0;
+
     ERRCK(__osPfsSelectBank(pfs, 0));
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, 1, (u8*)temp));
+    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, temp));
+
     __osIdCheckSum((u16*)temp, &sum, &isum);
-    id = (__OSPackId *)temp;
-    if (id->checksum != sum || id->inverted_checksum != isum)
-    {
-        ERRCK(__osCheckPackId(pfs, id));
-        if (ret != 0)
+    id = (__OSPackId*)temp;
+
+    if ((id->checksum != sum) || (id->inverted_checksum != isum)) {
+        ret = __osCheckPackId(pfs, id);
+
+        if (ret != 0) {
+            pfs->status |= PFS_ID_BROKEN;
             return ret;
+        }
     }
-    if ((id->deviceid & 1) == 0)
-    {
-        ERRCK(__osRepairPackId(pfs, id, &newid));
+
+    if (!(id->deviceid & 1)) {
+        ret = __osRepairPackId(pfs, id, &newid);
+
+        if (ret != 0) {
+            if (ret == PFS_ERR_ID_FATAL) {
+                pfs->status |= PFS_ID_BROKEN;
+            }
+            return ret;
+        }
+
         id = &newid;
-        if ((id->deviceid & 1) == 0)
+
+        if (!(id->deviceid & 1)) {
             return PFS_ERR_DEVICE;
+        }
     }
-    for (k = 0; k < ARRLEN(pfs->id); k++)
-    {
-        pfs->id[k] = ((u8 *)id)[k];
-    }
+
+    bcopy(id, pfs->id, BLOCKSIZE);
+
     pfs->version = id->version;
     pfs->banks = id->banks;
-    pfs->inode_start_page = pfs->banks * 2 + 3;
-    pfs->dir_size = 0x10;
-    pfs->inode_table = 8;
-    pfs->minode_table = pfs->banks * PFS_ONE_PAGE + 8;
-    pfs->dir_table = pfs->minode_table + pfs->banks * PFS_ONE_PAGE;
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, 7, pfs->label));
+    pfs->inode_start_page = 1 + DEF_DIR_PAGES + (2 * pfs->banks);
+    pfs->dir_size = DEF_DIR_PAGES * PFS_ONE_PAGE;
+    pfs->inode_table = 1 * PFS_ONE_PAGE;
+    pfs->minode_table = (1 + pfs->banks) * PFS_ONE_PAGE;
+    pfs->dir_table = pfs->minode_table + (pfs->banks * PFS_ONE_PAGE);
+
+    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_LABEL_AREA, pfs->label));
+
     ret = osPfsChecker(pfs);
     pfs->status |= PFS_INITIALIZED;
+
     return ret;
 }

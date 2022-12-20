@@ -113,8 +113,6 @@ $(BUILD_DIR)/src/os/exceptasm.o: MIPSISET := -mips3 -o32
 # Changes for kirby 64
 $(BUILD_DIR)/src/io/contreaddata.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/sirawdma.o: OPT_FLAGS := -O2 -O2
-$(BUILD_DIR)/src/io/pfsreadwritefile.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/src/io/pfsdeletefile.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/pimgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/pfssearchfile.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/conteepprobe.o: OPT_FLAGS := -O2
@@ -124,9 +122,7 @@ $(BUILD_DIR)/src/io/viswapcontext.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/vimgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/leodiskinit.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/leointerrupt.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/src/io/pfsfreeblocks.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/src/io/pfsselectbank.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/src/io/pfsallocatefile.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/io/pfs%.o: OPT_FLAGS := -O2 -mips2
 
 # libnaudio
 $(BUILD_DIR)/src/libnaudio/%.o: OPT_FLAGS := -mips2 -O3
