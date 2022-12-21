@@ -126,6 +126,8 @@ $(BUILD_DIR)/src/io/pfs%.o: OPT_FLAGS := -O2 -mips2
 $(BUILD_DIR)/src/io/pfsisplug.o: OPT_FLAGS := -O1 -mips2
 $(BUILD_DIR)/src/io/epirawread.o: OPT_FLAGS := -O1 -mips2
 
+# libaudio
+$(BUILD_DIR)/src/audio/cents2ratio.o: OPT_FLAGS := -mips2 -O2
 # libnaudio
 $(BUILD_DIR)/src/libnaudio/%.o: OPT_FLAGS := -mips2 -O3
 $(BUILD_DIR)/src/libnaudio/%.o: CC := tools/ido-5.3recomp/ido5.3_recomp/cc
