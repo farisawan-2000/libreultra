@@ -14,7 +14,7 @@ LEAF(_bcopy)
 	bge a1, v0, goforwards
 	b gobackwards
 
-GLABEL(goforwards)
+goforwards:
 
 	blt a2, 16, forwards_bytecopy
 	
@@ -23,20 +23,20 @@ GLABEL(goforwards)
 	beq v0, v1,forwalignable
 	
 
-GLABEL(forwards_bytecopy)
+forwards_bytecopy:
 	beqz a2, ret
 	addu v1, a0,a2
-GLABEL(bcopy_loop1)
+99:
 	lb v0, 0(a0)
 	addiu a0, a0,1
 	addiu a1, a1,1
 	sb v0, -1(a1)
-	bne a0, v1, bcopy_loop1
-GLABEL(ret)
+	bne a0, v1, 99b
+ret:
 	move v0, a3
 	jr ra
 
-GLABEL(forwalignable)
+forwalignable:
 	beqz v0, forwards
 	beq v0, 1,forw_copy3
 	beq v0, 2,forw_copy2
@@ -48,7 +48,7 @@ GLABEL(forwalignable)
 	sb v0, -1(a1)
 	b forwards
 
-GLABEL(forw_copy2)
+forw_copy2:
 	lh v0, 0(a0)
 	addiu a0, a0,2
 	addiu a1, a1,2
@@ -56,7 +56,7 @@ GLABEL(forw_copy2)
 	sh v0, -2(a1)
 	b forwards
 
-GLABEL(forw_copy3)
+forw_copy3:
 	lb v0, 0(a0)
 	lh v1, 1(a0)
 	addiu a0, a0,3
@@ -65,8 +65,8 @@ GLABEL(forw_copy3)
 	sb v0, -3(a1)
 	sh v1, -2(a1)
 
-GLABEL(forwards)
-GLABEL(forwards_32)
+forwards:
+forwards_32:
 	blt a2, 32, forwards_16
 	lw v0, 0(a0)
 	lw v1, 4(a0)
@@ -83,14 +83,13 @@ GLABEL(forwards_32)
 	sw v1, -28(a1)
 	sw t0, -24(a1)
 	sw t1, -20(a1)
-GLABEL(bcopy2) /* why? */
 	sw t2, -16(a1)
 	sw t3, -12(a1)
 	sw t4, -8(a1)
 	sw t5, -4(a1)
 	b forwards_32
 
-GLABEL(forwards_16)
+forwards_16:
 	blt a2, 16, forwards_4
 	lw v0, 0(a0)
 	lw v1, 4(a0)
@@ -105,7 +104,7 @@ GLABEL(forwards_16)
 	sw t1, -4(a1)
 	b forwards_16
 
-GLABEL(forwards_4)
+forwards_4:
 	blt a2, 4, forwards_bytecopy
 	
 	lw v0, 0(a0)
@@ -115,7 +114,7 @@ GLABEL(forwards_4)
 	sw v0, -4(a1)
 	b forwards_4
 	
-GLABEL(gobackwards)
+gobackwards:
 	add a0, a0,a2
 	add a1, a1,a2
 	blt a2, 16, backwards_bytecopy
@@ -124,21 +123,21 @@ GLABEL(gobackwards)
 	andi v1, a1,0x3
 	beq v0, v1,backalignable
 	
-GLABEL(backwards_bytecopy)
+backwards_bytecopy:
 	beqz a2, ret
 	addiu a0, a0,-1
 	addiu a1, a1,-1
 	subu v1, a0,a2
-GLABEL(bcopy_loop2)
+99:
 	lb v0, 0(a0)
 	addiu a0, a0,-1
 	addiu a1, a1,-1
 	sb v0, 1(a1)
-	bne a0, v1,bcopy_loop2
+	bne a0, v1,99b
 
 	move v0, a3
 	jr ra
-GLABEL(backalignable)
+backalignable:
 	beqz v0, backwards
 	beq v0, 3,back_copy3
 	beq v0, 2,back_copy2
@@ -149,7 +148,7 @@ GLABEL(backalignable)
 	sb v0, 0(a1)
 	b backwards
 
-GLABEL(back_copy2)
+back_copy2:
 	lh v0, -2(a0)
 	addiu a0, a0,-2
 	addiu a1, a1,-2
@@ -157,7 +156,7 @@ GLABEL(back_copy2)
 	sh v0, 0(a1)
 	b backwards
 
-GLABEL(back_copy3)
+back_copy3:
 	lb v0, -1(a0)
 	lh v1, -3(a0)
 	addiu a0, a0,-3
@@ -166,8 +165,8 @@ GLABEL(back_copy3)
 	sb v0, 2(a1)
 	sh v1, 0(a1)
 
-GLABEL(backwards)
-GLABEL(backwards_32)
+backwards:
+backwards_32:
 	blt a2, 32, backwards_16
 	#slti AT, a2,16
 	lw v0, -4(a0)
@@ -191,7 +190,7 @@ GLABEL(backwards_32)
 	sw t5, 0(a1)
 	b backwards_32
 
-GLABEL(backwards_16)
+backwards_16:
 	blt a2, 16, backwards_4
 	lw v0, -4(a0)
 	lw v1, -8(a0)
@@ -206,7 +205,7 @@ GLABEL(backwards_16)
 	sw t1, 0(a1)
 	b backwards_16
 
-GLABEL(backwards_4)
+backwards_4:
 	blt a2,4, backwards_bytecopy
 	lw v0, -4(a0)
 	addiu a0, a0,-4

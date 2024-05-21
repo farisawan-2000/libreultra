@@ -60,7 +60,7 @@
 x:;							\
 	.frame	sp,0,ra
 
-#define	GLABEL(x) .globl x; x:
+#define	GLABEL(x) x:
 
 /*
  * XLEAF -- declare alternate entry to leaf routine
