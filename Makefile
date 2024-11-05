@@ -111,6 +111,9 @@ $(BUILD_DIR)/src/libc/ll.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/src/libc/ll%.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/src/os/exceptasm.o: MIPSISET := -mips3 -o32
 # Changes for kirby 64
+$(BUILD_DIR)/src/io/crc.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/contramwrite.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/contramread.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/contreaddata.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/sirawdma.o: OPT_FLAGS := -O2 -O2
 $(BUILD_DIR)/src/io/pimgr.o: OPT_FLAGS := -O2
@@ -124,8 +127,9 @@ $(BUILD_DIR)/src/io/vimgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/leodiskinit.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/leointerrupt.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/pfs%.o: OPT_FLAGS := -O2 -mips2
-$(BUILD_DIR)/src/io/pfsisplug.o: OPT_FLAGS := -O1 -mips2
 $(BUILD_DIR)/src/io/pfsallocatefile.o: OPT_FLAGS := -O2
+
+$(BUILD_DIR)/src/io/pfsisplug.o: OPT_FLAGS := -O1 -mips2
 $(BUILD_DIR)/src/io/epirawread.o: OPT_FLAGS := -O1 -mips2
 
 # libaudio
