@@ -126,6 +126,7 @@ $(BUILD_DIR)/src/io/viswapcontext.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/vimgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/leodiskinit.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/leointerrupt.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/motor.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/pfs%.o: OPT_FLAGS := -O2 -mips2
 $(BUILD_DIR)/src/io/pfsallocatefile.o: OPT_FLAGS := -O2
 
