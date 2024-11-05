@@ -124,6 +124,7 @@ $(BUILD_DIR)/src/io/leodiskinit.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/leointerrupt.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/pfs%.o: OPT_FLAGS := -O2 -mips2
 $(BUILD_DIR)/src/io/pfsisplug.o: OPT_FLAGS := -O1 -mips2
+$(BUILD_DIR)/src/io/pfsallocatefile.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/epirawread.o: OPT_FLAGS := -O1 -mips2
 
 # libaudio
