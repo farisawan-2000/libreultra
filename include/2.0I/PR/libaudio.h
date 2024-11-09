@@ -755,8 +755,8 @@ typedef struct {
 } ALSeqPlayer;
 
 typedef struct {
-    ALPlayer            node;           /* note: must be first in structure */
-    ALSynth             *drvr;          /* reference to the client driver   */
+    /* 0x00 */ ALPlayer            node;           /* note: must be first in structure */
+    /* 0x14 */ ALSynth             *drvr;          /* reference to the client driver   */
     ALCSeq              *target;        /* current sequence                 */
     ALMicroTime         curTime;
     ALBank              *bank;          /* current ALBank                   */
@@ -765,6 +765,7 @@ typedef struct {
     s32                 state;
     u16                 chanMask;       /* active channels                  */
     s16                 vol;            /* overall sequence volume          */
+    u32 unk34;
     u8                  maxChannels;    /* number of MIDI channels          */
     u8                  debugFlags;     /* control which error get reported */
     ALEvent             nextEvent;
