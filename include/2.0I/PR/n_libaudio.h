@@ -227,6 +227,7 @@ typedef struct {
     u8                  maxChannels;    /* number of MIDI channels          */
     u8                  debugFlags;     /* control which error get reported */
     N_ALEvent           nextEvent;
+    u32 isThisOffset[8];
     ALEventQueue        evtq;
     ALMicroTime         frameTime;
     ALChanState        *chanState;      /* 16 channels for MIDI             */
