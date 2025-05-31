@@ -195,14 +195,13 @@ distclean:
 $(BUILD_DIR)/%.o: %.c
 	@$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $< 
 	$(CC) -c $(CFLAGS) -o $@ $<
-	$(CROSS)strip --discard-locals $@
-
 
 $(BUILD_DIR)/%.o: %.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 $(BUILD_DIR)/libultra_rom.a: $(O_FILES)
 	$(AR) rcs -o $@ $(O_FILES)
+	$(CROSS)strip --strip-unneeded $@
 
 $(BUILD_DIR)/libn_audio.a: $(LIBNAUDIO_O_FILES)
 	$(AR) rcs -o $@ $(LIBNAUDIO_O_FILES)
