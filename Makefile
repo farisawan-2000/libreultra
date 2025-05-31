@@ -195,6 +195,7 @@ distclean:
 $(BUILD_DIR)/%.o: %.c
 	@$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $< 
 	$(CC) -c $(CFLAGS) -o $@ $<
+	python tools/set_o32abi_bit.py $@
 
 $(BUILD_DIR)/%.o: %.s
 	$(AS) $(ASFLAGS) -o $@ $<
