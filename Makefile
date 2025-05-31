@@ -195,6 +195,7 @@ distclean:
 $(BUILD_DIR)/%.o: %.c
 	@$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $< 
 	$(CC) -c $(CFLAGS) -o $@ $<
+	$(CROSS)strip --discard-locals $@
 
 
 $(BUILD_DIR)/%.o: %.s
