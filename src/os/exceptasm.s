@@ -85,7 +85,7 @@ GLABEL(__osException)
 
 GLABEL(savecontext)
 	move t0, k0
-	lw k0 __osRunningThread 
+	lw k0, __osRunningThread 
 	
 	ld t1, THREAD_AT(t0)
 	sd t1, THREAD_AT(k0)

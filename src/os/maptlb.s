@@ -48,7 +48,7 @@ LEAF(osMapTLB)
 	#nop
 	li t3, K0BASE
 	STAY2(mtc0 t3, C0_ENTRYHI)
-12f:
+12:
     .set noreorder
 	nop
 	tlbwi
