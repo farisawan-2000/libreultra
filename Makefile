@@ -31,6 +31,7 @@ LIBNAUDIO_SRC_DIRS := src/libnaudio
 
 MIPSISET := -mips2 -32
 
+MIPS_ABI := -mabi=32
 OPT_FLAGS := -O1
 
 C_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
@@ -95,6 +96,7 @@ $(BUILD_DIR)/src/libc/ll%.o: MIPSISET := -mips3 -o32
 $(BUILD_DIR)/src/libc/ll.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/src/libc/ll%.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/src/os/exceptasm.o: MIPSISET := -mips3 -o32
+$(BUILD_DIR)/src/os/exceptasm.o: MIPS_ABI :=
 # Changes for kirby 64
 $(BUILD_DIR)/src/io/crc.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/contramwrite.o: OPT_FLAGS := -O2
@@ -134,7 +136,7 @@ INCLUDE_CFLAGS := -I include/2.0I -I include/2.0I/PR -I src/
 CC_CHECK := gcc -fsyntax-only $(CC_CFLAGS) -nostdinc $(TARGET_CFLAGS) $(INCLUDE_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -DNON_MATCHING -DAVOID_UB $(VERSION_CFLAGS) $(GRUCODE_CFLAGS) -D_LANGUAGE_C -D_MIPS_SZINT=32 -D_MIPS_SZLONG=32
 ASFLAGS = -G 0 $(TARGET_CFLAGS) $(INCLUDE_CFLAGS) $(VERSION_CFLAGS) \
           -march=vr4300 -mtune=vr4300 $(ASM_OPT_FLAGS) \
-          -D_MIPS_SZLONG=32 -mfix4300 -mabi=32 -mips3
+          -D_MIPS_SZLONG=64 -mfix4300 $(MIPS_ABI) -mips3
 CFLAGS = -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -fullwarn $(OPT_FLAGS) -nostdinc $(TARGET_CFLAGS) $(INCLUDE_CFLAGS) $(VERSION_CFLAGS) $(MIPSISET)
 OBJCOPYFLAGS := --pad-to=0x800000 --gap-fill=0xFF
 SYMBOL_LINKING_FLAGS := $(addprefix -R ,$(SEG_FILES))
