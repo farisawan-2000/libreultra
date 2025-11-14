@@ -1,9 +1,6 @@
 #include "asm_helper.h"
 #include "exceptasm.h"
 #include <os.h>
-.set gp=64
-
-
 .rodata
 
 EXPORT(__osHwIntTable)
