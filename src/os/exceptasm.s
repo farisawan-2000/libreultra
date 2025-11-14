@@ -95,15 +95,6 @@ GLABEL(savecontext)
 	ld t1, THREAD_T2(t0)
 	sd t1, THREAD_T2(k0)
 
-	mflo t0
-	sd t0, THREAD_LO(k0)
-	mfhi t0
-	sd t0, THREAD_HI(k0)
-
-	lw k1, THREAD_SR(k0)
-	andi t1, k1, SR_IMASK
-	beqz t1, savercp
-
 3:
 
 	sd v0, THREAD_V0(k0)
@@ -131,6 +122,15 @@ GLABEL(savecontext)
 	sd sp, THREAD_SP(k0)
 	sd s8, THREAD_S8(k0)
 	sd ra, THREAD_RA(k0)
+
+	mflo t0
+	sd t0, THREAD_LO(k0)
+	mfhi t0
+	sd t0, THREAD_HI(k0)
+
+	lw k1, THREAD_SR(k0)
+	andi t1, k1, SR_IMASK
+	beqz t1, savercp
 	
 /*if any interrupts are enabled*/
 	la t0, __OSGlobalIntMask
