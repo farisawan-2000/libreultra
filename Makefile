@@ -97,6 +97,7 @@ $(BUILD_DIR)/src/libc/ll.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/src/libc/ll%.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/src/os/exceptasm.o: MIPSISET := -mips3 -o32
 $(BUILD_DIR)/src/os/exceptasm.o: MIPS_ABI :=
+$(BUILD_DIR)/src/os/exceptasm.o: OPT_FLAGS :=
 # Changes for kirby 64
 $(BUILD_DIR)/src/io/crc.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/contramwrite.o: OPT_FLAGS := -O2
