@@ -50,20 +50,20 @@ extern "C" {
  * Structure for file system
  */
 typedef struct {
-        int             status;
-        OSMesgQueue     *queue;
-        int             channel;
-        u8              id[32];
-        u8              label[32];
-        int             version;
-        int             dir_size;
-        int             inode_table;            /* block location */
-        int             minode_table;           /* mirrioring inode_table */
-        int             dir_table;              /* block location */
-        int             inode_start_page;       /* page # */
-        u8              banks;
-        u8              activebank;
-} OSPfs;
+        /* 0x00 */ int             status;
+        /* 0x04 */ OSMesgQueue     *queue;
+        /* 0x08 */ int             channel;
+        /* 0x0C */ u8              id[0x20];
+        /* 0x2C */ u8              label[0x20];
+        /* 0x4C */ int             version;
+        /* 0x50 */ int             dir_size;
+        /* 0x54 */ int             inode_table;            /* block location */
+        /* 0x58 */ int             minode_table;           /* mirrioring inode_table */
+        /* 0x5C */ int             dir_table;              /* block location */
+        /* 0x60 */ int             inode_start_page;       /* page # */
+        /* 0x62 */ u8              banks;
+        /* 0x64 */ u8              activebank;
+} OSPfs; // size: 0x68?
 
 typedef struct {
         u32     file_size;      /* bytes */

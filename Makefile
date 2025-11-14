@@ -95,18 +95,25 @@ $(BUILD_DIR)/src/libc/ll.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/src/libc/ll%.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/src/os/exceptasm.o: MIPSISET := -mips3 -o32
 # Changes for kirby 64
+$(BUILD_DIR)/src/io/crc.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/contramwrite.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/contramread.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/contreaddata.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/sirawdma.o: OPT_FLAGS := -O2 -O2
 $(BUILD_DIR)/src/io/pimgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/pfssearchfile.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/conteepprobe.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/conteepread.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/conteepwrite.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/contpfs.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/viswapcontext.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/vimgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/leodiskinit.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/leointerrupt.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/io/motor.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/src/io/pfs%.o: OPT_FLAGS := -O2 -mips2
+$(BUILD_DIR)/src/io/pfsallocatefile.o: OPT_FLAGS := -O2
+
 $(BUILD_DIR)/src/io/pfsisplug.o: OPT_FLAGS := -O1 -mips2
 $(BUILD_DIR)/src/io/epirawread.o: OPT_FLAGS := -O1 -mips2
 
@@ -114,6 +121,7 @@ $(BUILD_DIR)/src/io/epirawread.o: OPT_FLAGS := -O1 -mips2
 $(BUILD_DIR)/src/audio/cents2ratio.o: OPT_FLAGS := -mips2 -O2
 # libnaudio
 $(BUILD_DIR)/src/libnaudio/%.o: OPT_FLAGS := -mips2 -O3
+$(BUILD_DIR)/src/libnaudio/n_synallocvoice.o: OPT_FLAGS := -mips2 -O2
 $(BUILD_DIR)/src/libnaudio/%.o: CC := tools/ido-5.3recomp/ido5.3_recomp/cc
 
 TARGET_CFLAGS := -I include/2.0I -I include/2.0I/PR -DTARGET_N64 -D_FINALROM -DF3DEX_GBI -DNDEBUG
@@ -170,12 +178,14 @@ distclean:
 $(BUILD_DIR)/%.o: %.c
 	@$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $< 
 	$(CC) -c $(CFLAGS) -o $@ $<
+	python tools/set_o32abi_bit.py $@
 
 $(BUILD_DIR)/%.o: %.s
 	$(AS) -c $(ASFLAGS) -o $@ $<
 
 $(BUILD_DIR)/libultra_rom.a: $(O_FILES)
 	$(AR) rcs -o $@ $(O_FILES)
+	$(CROSS)strip --strip-unneeded $@
 
 $(BUILD_DIR)/libn_audio.a: $(LIBNAUDIO_O_FILES)
 	$(AR) rcs -o $@ $(LIBNAUDIO_O_FILES)

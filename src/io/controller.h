@@ -52,7 +52,12 @@ typedef struct
     /* 0x1 */ u8 txsize;
     /* 0x2 */ u8 rxsize;
     /* 0x3 */ u8 cmd;
+#if BUILD_VERSION >= VERSION_J
+    /* 0x4 */ u8 addrh;
+    /* 0x5 */ u8 addrl;
+#else
     /* 0x4 */ u16 address;
+#endif
     /* 0x6 */ u8 data[BLOCKSIZE];
     /* 0x26 */ u8 datacrc;
 } __OSContRamReadFormat;
@@ -113,6 +118,13 @@ typedef struct
 #define CONT_CMD_READ_EEPROM 4
 #define CONT_CMD_WRITE_EEPROM 5
 #define CONT_CMD_RESET 0xff
+
+#define CONT_CMD_READ_PAK       2
+#define CONT_CMD_WRITE_PAK      3
+#define CONT_CMD_READ_PAK_TX       3
+#define CONT_CMD_WRITE_PAK_TX      35
+#define CONT_CMD_READ_PAK_RX       33
+#define CONT_CMD_WRITE_PAK_RX      1
 
 #define CONT_CMD_REQUEST_STATUS_TX 1
 #define CONT_CMD_READ_BUTTON_TX 1

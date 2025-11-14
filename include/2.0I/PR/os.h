@@ -219,30 +219,7 @@ typedef struct OSTimer_s {
 	OSMesg			msg;		/* Message to send */
 } OSTimer;
 
-/*
- * Structure for controllers 
- */
-
-typedef struct {
-	u16     type;                   /* Controller Type */
-	u8      status;                 /* Controller status */
-	u8	errno;
-}OSContStatus;
-
-typedef struct {
-	u16     button;
-	s8      stick_x;		/* -80 <= stick_x <= 80 */
-	s8      stick_y;		/* -80 <= stick_y <= 80 */
-	u8	errno;
-} OSContPad;
-
-typedef struct {
-	void    *address;               /* Ram pad Address:  11 bits */
-	u8      databuffer[32];         /* address of the data buffer */
-        u8      addressCrc;             /* CRC code for address */
-	u8      dataCrc;                /* CRC code for data */
-	u8	errno;
-} OSContRamIo;
+#include <os_cont.h>
 
 /*
  * Structure for file system
@@ -451,6 +428,21 @@ typedef struct {
 #define OS_VI_MPAL_HAF1		39
 #define OS_VI_MPAL_HPN2		40
 #define OS_VI_MPAL_HPF2		41
+
+#define OS_VI_FPAL_LPN1         42      /* FPAL - Full screen PAL */
+#define OS_VI_FPAL_LPF1         43
+#define OS_VI_FPAL_LAN1         44
+#define OS_VI_FPAL_LAF1         45
+#define OS_VI_FPAL_LPN2         46
+#define OS_VI_FPAL_LPF2         47
+#define OS_VI_FPAL_LAN2         48
+#define OS_VI_FPAL_LAF2         49
+#define OS_VI_FPAL_HPN1         50
+#define OS_VI_FPAL_HPF1         51
+#define OS_VI_FPAL_HAN1         52
+#define OS_VI_FPAL_HAF1         53
+#define OS_VI_FPAL_HPN2         54
+#define OS_VI_FPAL_HPF2         55
 
 /*
  * Video Interface (VI) special features
@@ -853,18 +845,6 @@ extern void		osSetTime(OSTime);
 extern int		osSetTimer(OSTimer *, OSTime, OSTime,
 				   OSMesgQueue *, OSMesg);
 extern int		osStopTimer(OSTimer *);
-
-/* Controller interface */
-
-extern s32		osContInit(OSMesgQueue *, u8 *, OSContStatus *);
-extern s32		osContReset(OSMesgQueue *, OSContStatus *);
-extern s32		osContStartQuery(OSMesgQueue *);
-extern s32		osContStartReadData(OSMesgQueue *);
-#ifndef _HW_VERSION_1
-extern s32		osContSetCh(u8);
-#endif
-extern void		osContGetQuery(OSContStatus *);
-extern void		osContGetReadData(OSContPad *);
 
 /* EEPROM interface */
 

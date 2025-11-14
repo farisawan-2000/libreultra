@@ -2,7 +2,7 @@
 #include <rcp.h>
 #include "viint.h"
 
-extern u32 D_8003FE6C;
+extern u32 __additional_scanline;
 void __osViSwapContext()
 {
     register OSViMode *vm;
@@ -38,7 +38,7 @@ void __osViSwapContext()
     {
         vc->y.scale = vm->fldRegs[field].yScale;
     }
-    vStart = (vm->fldRegs[field].vStart - (D_8003FE6C << 0x10)) + D_8003FE6C;
+    vStart = (vm->fldRegs[field].vStart - (__additional_scanline << 0x10)) + __additional_scanline;
     hStart = vm->comRegs.hStart;
     if (vc->state & VI_STATE_BLACK)
     {

@@ -9,14 +9,6 @@ OSPiHandle *__osPiTable = NULL;
 OSPiHandle *__osCurrentHandle[2] = {&CartRomHandle2, &LeoDiskHandle80098E78};
 static OSThread piThread;
 static char piThreadStack[OS_PIM_STACKSIZE];
-#ifdef _DEBUG
-static OSThread ramromThread;
-static char ramromThreadStack[OS_RAMROM_STACKSIZE];
-static OSMesgQueue getRamromQ;
-static OSMesg getRamromBuf[1];
-static OSMesgQueue freeRamromQ;
-static OSMesg freeRamromBuf[1];
-#endif
 static OSMesgQueue piEventQueue;
 static OSMesg piEventBuf[1];
 static void func_800323FC(void);
