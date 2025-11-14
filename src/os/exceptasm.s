@@ -95,7 +95,7 @@ GLABEL(savecontext)
 	ld t1, THREAD_T2(t0)
 	sd t1, THREAD_T2(k0)
 
-GLABEL(savecontext_3) /* this is probably left over from debug, not referenced but required for instruction ordering to match */
+3:
 
 	sd v0, THREAD_V0(k0)
 	sd v1, THREAD_V1(k0)
@@ -208,11 +208,11 @@ GLABEL(handle_interrupt)
 GLABEL(next_interrupt)
 	andi t1, s0, SR_IMASK
 	srl t2, t1, 0xc
-	bnez t2, next_interrupt_1
+	bnez t2, 1f
 	
 	srl t2, t1, 0x8
 	addi t2, t2, 16
-GLABEL(next_interrupt_1)
+1:
 
 	lbu t2, __osIntOffTable(t2)
 
@@ -246,15 +246,15 @@ GLABEL(cart)
 	la sp, leoDiskStack
 	li a0, MESG(OS_EVENT_CART)
 	addiu sp, sp, OS_PIM_STACKSIZE-16 /* TODO maybe make OS_LEO_STACKSIZE */
-	beqz t2, cart_1
+	beqz t2, 1f
 
 	jalr t2
 	
 	li a0, MESG(OS_EVENT_CART)
-	beqz v0, cart_1
+	beqz v0, 1f
 	b redispatch
 	
-GLABEL(cart_1)
+1:
 	jal send_mesg
 	b next_interrupt
 	
@@ -461,13 +461,13 @@ LEAF(send_mesg)
 	/* t5 = mq->first + mq->validcount % mq->msgcount */
 	#rem t5, t5, t4 /* this should work but the instruction ordering gets off and there's an extra nop */
 	div zero, t5, t4
-	bnez t4, send_mesg_1
+	bnez t4, 1f
 	break 0x7
-GLABEL(send_mesg_1)
-	bne t4, -1, send_mesg_2
-	bne t5, 0x80000000, send_mesg_2
+1:
+	bne t4, -1, 2f
+	bne t5, 0x80000000, 2f
 	break 0x6
-GLABEL(send_mesg_2)
+2:
 	lw t4, MQ_MSG(t1)
 	mfhi t5
 	/* end nasty modulus stuff */
@@ -581,14 +581,14 @@ LEAF(__osEnqueueThread)
 	lw t7, THREAD_PRI(a1)
 	move t9, a0
 	lw t6, THREAD_PRI(t8)
-	blt t6, t7, enqueue_thread_1
-GLABEL(enqueue_thread_2)
+	blt t6, t7, 1f
+2:
 	move t9, t8
 	lw t8, THREAD_NEXT(t8)
 	lw t6, THREAD_PRI(t8)
-	bge t6, t7, enqueue_thread_2
+	bge t6, t7, 2b
 
-GLABEL(enqueue_thread_1)
+1:
 	lw t8, THREAD_NEXT(t9)
 	sw t8, THREAD_NEXT(a1)
 	sw a1, THREAD_NEXT(t9)
@@ -659,7 +659,7 @@ GLABEL(__osDispatchThreadSave)
 	STAY2(mtc0 k1, C0_EPC)
 
 	lw k1, THREAD_FP(k0)
-	beqz k1, dispatchThreadSave_1
+	beqz k1, 1f
 	
 	lw k1, THREAD_FPCSR(k0)
 	STAY2(ctc1 k1, $31)
@@ -680,7 +680,7 @@ GLABEL(__osDispatchThreadSave)
 	ldc1 $f28, THREAD_FP28(k0)
 	ldc1 $f30, THREAD_FP30(k0)
 	
-GLABEL(dispatchThreadSave_1)
+1:
 	lw k1, THREAD_RCP(k0)
 	la k0, __OSGlobalIntMask
 	lw k0, 0(k0)
