@@ -78,7 +78,6 @@ LD        := $(CROSS)ld
 AR        := $(CROSS)ar
 OBJDUMP   := $(CROSS)objdump
 OBJCOPY   := $(CROSS)objcopy
-PYTHON    := uv run
 
 ASM_OPT_FLAGS := -O1
 
@@ -179,7 +178,7 @@ distclean:
 $(BUILD_DIR)/%.o: %.c
 	@$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $< 
 	$(CC) -c $(CFLAGS) -o $@ $<
-	$(PYTHON) tools/set_o32abi_bit.py $@
+	python tools/set_o32abi_bit.py $@
 
 $(BUILD_DIR)/%.o: %.s
 	$(AS) -c $(ASFLAGS) -o $@ $<
