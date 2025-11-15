@@ -1,8 +1,7 @@
 #include "asm_helper.h"
 #include "exceptasm.h"
 #include <os.h>
-
-.data
+.rodata
 
 EXPORT(__osHwIntTable)
 .word 0x0, 0x0, 0x0, 0x0, 0x0
