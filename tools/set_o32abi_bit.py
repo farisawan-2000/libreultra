@@ -20,6 +20,8 @@ if __name__ == '__main__':
         #     sys.exit(1)
 
         flags |= 0x00001000 # set EF_MIPS_ABI_O32
+        # flags &= ~(0x20000000) # Clear mips3
+        # flags |=  (0x10000000) # set mips2
         f.seek(36)
         f.write(struct.pack('>I', flags))
 
