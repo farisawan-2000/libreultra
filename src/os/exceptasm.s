@@ -1,10 +1,11 @@
 #include "asm_helper.h"
 #include "exceptasm.h"
 #include <os.h>
+/*  TODO: put this into kirby 64s .data section
 .set gp=64
 
 
-.rodata
+.data
 
 EXPORT(__osHwIntTable)
 .word 0x0, 0x0, 0x0, 0x0, 0x0
@@ -54,7 +55,7 @@ EXPORT(__osIntOffTable)
 .byte CART 
 EXPORT(__osIntTable)
 .word redispatch, sw1, sw2, rcp, cart, prenmi, IP6_Hdlr, IP7_Hdlr, counter
-
+*/
 .text
 
 LEAF(__osExceptionPreamble)
