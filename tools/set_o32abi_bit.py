@@ -18,7 +18,7 @@ if __name__ == '__main__':
         # if flags & 0xF0000000 != 0x20000000: # test for mips3
         #     print('Error: Architecture not mips3')
         #     sys.exit(1)
-        flags &= ~(0x00003000) # clear EF_MIPS_ABI_O32 and EF_MIPS_ABI_EABI32
+
         flags |= 0x00001000 # set EF_MIPS_ABI_O32
         f.seek(36)
         f.write(struct.pack('>I', flags))
