@@ -15,9 +15,9 @@ if __name__ == '__main__':
 
         f.seek(36)
         flags = struct.unpack('>I', f.read(4))[0]
-        if flags & 0xF0000000 != 0x20000000: # test for mips3
-            print('Error: Architecture not mips3')
-            sys.exit(1)
+        # if flags & 0xF0000000 != 0x20000000: # test for mips3
+        #     print('Error: Architecture not mips3')
+        #     sys.exit(1)
 
         flags |= 0x00001000 # set EF_MIPS_ABI_O32
         f.seek(36)
