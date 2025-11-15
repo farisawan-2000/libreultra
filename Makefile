@@ -186,7 +186,6 @@ $(BUILD_DIR)/%.o: %.c
 
 $(BUILD_DIR)/%.o: %.s
 	$(AS) -c $(ASFLAGS) -o $@ $<
-	$(PYTHON) tools/set_o32abi_bit.py $@
 
 $(BUILD_DIR)/libultra_rom.a: $(O_FILES)
 	$(AR) rcs -o $@ $(O_FILES)
