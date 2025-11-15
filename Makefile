@@ -1,3 +1,5 @@
+# Makefile to rebuild SM64 split image
+
 ### Default target ###
 
 default: all
@@ -25,9 +27,23 @@ TARGET_N64 ?= 1
 BUILD_DIR_BASE := build
 BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)
 
+#LIBULTRA := $(BUILD_DIR)/libultra.a
+#ROM := $(BUILD_DIR)/$(TARGET).z64
+#ELF := $(BUILD_DIR)/$(TARGET).elf
+
+
 # Directories containing source files
 SRC_DIRS := src src/audio src/gt src/gu src/io src/libc src/os src/rg src/sched src/sp
 LIBNAUDIO_SRC_DIRS := src/libnaudio
+#ASM_DIRS := asm lib
+#BIN_DIRS := bin bin/$(VERSION)
+
+#ULTRA_SRC_DIRS := lib/src lib/src/math
+#ULTRA_ASM_DIRS := lib/asm lib/data
+#ULTRA_BIN_DIRS := lib/bin
+
+#GODDARD_SRC_DIRS := src/goddard src/goddard/dynlists
+
 
 MIPSISET := -mips2 -32
 
@@ -54,7 +70,7 @@ DUMMY != mkdir -p $(ALL_DIRS)
 ##################### Compiler Options #######################
 IRIX_ROOT := tools/ido
 
-ifeq ($(shell type mips-linux-gnu-gcc >/dev/null 2>/dev/null; echo $$?), 0)
+ifeq ($(shell type mips-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
 	CROSS := mips-linux-gnu-
 else
 	CROSS := mips64-elf-
@@ -69,8 +85,8 @@ ifndef QEMU_IRIX
 endif
 
 # AS        := tools/ido-5.3recomp/ido5.3_recomp/as
-# AS        := $(QEMU_IRIX) -silent -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/as
-AS		  := $(CROSS)gcc -x assembler-with-cpp
+AS        := $(QEMU_IRIX) -silent -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/as
+#AS		  := $(CROSS)as
 CC        := tools/ido-5.3recomp/ido5.3_recomp/cc
 #AR        := $(QEMU_IRIX) -silent -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/ar
 CPP       := cpp -P
@@ -124,16 +140,17 @@ $(BUILD_DIR)/src/libnaudio/%.o: OPT_FLAGS := -mips2 -O3
 $(BUILD_DIR)/src/libnaudio/n_synallocvoice.o: OPT_FLAGS := -mips2 -O2
 $(BUILD_DIR)/src/libnaudio/%.o: CC := tools/ido-5.3recomp/ido5.3_recomp/cc
 
-TARGET_CFLAGS := -I include/2.0I -I include/2.0I/PR -DTARGET_N64 -D_FINALROM -DF3DEX_GBI -DNDEBUG
-CC_CFLAGS := -fno-builtin
+#ifeq ($(TARGET_N64),1)
+	TARGET_CFLAGS := -nostdinc -I include/2.0I -I include/2.0I/PR -DTARGET_N64 -D_FINALROM -DF3DEX_GBI -DNDEBUG
+	CC_CFLAGS := -fno-builtin
+#endif
 
 INCLUDE_CFLAGS := -I include/2.0I -I include/2.0I/PR -I src/
 
 # Check code syntax with host compiler
-CC_CHECK := gcc -fsyntax-only $(CC_CFLAGS) -nostdinc $(TARGET_CFLAGS) $(INCLUDE_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -DNON_MATCHING -DAVOID_UB $(VERSION_CFLAGS) $(GRUCODE_CFLAGS) -D_LANGUAGE_C -D_MIPS_SZINT=32 -D_MIPS_SZLONG=32
-ASFLAGS = -G 0 $(TARGET_CFLAGS) $(INCLUDE_CFLAGS) $(VERSION_CFLAGS) \
-          -march=r4300 -mtune=r4300 $(ASM_OPT_FLAGS)
-CFLAGS = -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -fullwarn $(OPT_FLAGS) -nostdinc $(TARGET_CFLAGS) $(INCLUDE_CFLAGS) $(VERSION_CFLAGS) $(MIPSISET)
+CC_CHECK := gcc -fsyntax-only $(CC_CFLAGS) $(TARGET_CFLAGS) $(INCLUDE_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -DNON_MATCHING -DAVOID_UB $(VERSION_CFLAGS) $(GRUCODE_CFLAGS) -D_LANGUAGE_C -D_MIPS_SZINT=32 -D_MIPS_SZLONG=32
+ASFLAGS = -v -Wab,-r4300_mul -non_shared -G 0 $(TARGET_CFLAGS) $(INCLUDE_CFLAGS) $(VERSION_CFLAGS) $(MIPSISET) $(ASM_OPT_FLAGS)
+CFLAGS = -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -fullwarn $(OPT_FLAGS) $(TARGET_CFLAGS) $(INCLUDE_CFLAGS) $(VERSION_CFLAGS) $(MIPSISET)
 OBJCOPYFLAGS := --pad-to=0x800000 --gap-fill=0xFF
 SYMBOL_LINKING_FLAGS := $(addprefix -R ,$(SEG_FILES))
 LDFLAGS := -T undefined_syms.txt -T $(BUILD_DIR)/$(LD_SCRIPT) -Map $(BUILD_DIR)/sm64.$(VERSION).map --no-check-sections $(SYMBOL_LINKING_FLAGS)
@@ -180,8 +197,9 @@ $(BUILD_DIR)/%.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 	python tools/set_o32abi_bit.py $@
 
+
 $(BUILD_DIR)/%.o: %.s
-	$(AS) -c $(ASFLAGS) -o $@ $<
+	$(AS) $(ASFLAGS) -o $@ $<
 
 $(BUILD_DIR)/libultra_rom.a: $(O_FILES)
 	$(AR) rcs -o $@ $(O_FILES)
