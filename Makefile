@@ -196,24 +196,24 @@ distclean:
 
 
 $(BUILD_DIR)/%.o: %.c
-	@printf "    [LIBULTRA CC] $<\n"
+	@printf "    [LIBULTRA:CC] $<\n"
 	@$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $< 
 	$(V)$(CC) -c $(CFLAGS) -o $@ $<
 	$(V)$(PYTHON) tools/set_o32abi_bit.py $@
 
 
 $(BUILD_DIR)/%.o: %.s
-	@printf "    [LIBULTRA AS] $<\n"
-	$(V)$(AS) $(ASFLAGS) -o $@ $<
+	@printf "    [LIBULTRA:AS] $<\n"
+	$(V)$(AS) $(ASFLAGS) -o $@ $< &>/dev/null
 	$(V)$(PYTHON) tools/set_o32abi_bit.py $@
 
 $(BUILD_DIR)/libultra_rom.a: $(O_FILES)
-	@printf "    [LIBULTRA AR] $<\n"
+	@printf "    [LIBULTRA:AR] $<\n"
 	$(V)$(AR) rcs -o $@ $(O_FILES)
 	$(V)$(CROSS)strip --strip-unneeded $@
 
 $(BUILD_DIR)/libn_audio.a: $(LIBNAUDIO_O_FILES)
-	@printf "    [LIBN_AUDIO AR] $<\n"
+	@printf "    [LIBN_AUDIO:AR] $<\n"
 	$(AR) rcs -o $@ $(LIBNAUDIO_O_FILES)
 
 #$(BUILD_DIR)/libultra.a: $(O_FILES)
