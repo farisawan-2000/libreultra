@@ -4,6 +4,8 @@
 
 default: all
 
+V=@
+
 ### Build Options ###
 
 # These options can either be changed by modifying the makefile, or
@@ -194,20 +196,24 @@ distclean:
 
 
 $(BUILD_DIR)/%.o: %.c
+	@printf "    [LIBULTRA CC] $<\n"
 	@$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $< 
-	$(CC) -c $(CFLAGS) -o $@ $<
-	$(PYTHON) tools/set_o32abi_bit.py $@
+	$(V)$(CC) -c $(CFLAGS) -o $@ $<
+	$(V)$(PYTHON) tools/set_o32abi_bit.py $@
 
 
 $(BUILD_DIR)/%.o: %.s
-	$(AS) $(ASFLAGS) -o $@ $<
-	$(PYTHON) tools/set_o32abi_bit.py $@
+	@printf "    [LIBULTRA AS] $<\n"
+	$(V)$(AS) $(ASFLAGS) -o $@ $<
+	$(V)$(PYTHON) tools/set_o32abi_bit.py $@
 
 $(BUILD_DIR)/libultra_rom.a: $(O_FILES)
-	$(AR) rcs -o $@ $(O_FILES)
-	$(CROSS)strip --strip-unneeded $@
+	@printf "    [LIBULTRA AR] $<\n"
+	$(V)$(AR) rcs -o $@ $(O_FILES)
+	$(V)$(CROSS)strip --strip-unneeded $@
 
 $(BUILD_DIR)/libn_audio.a: $(LIBNAUDIO_O_FILES)
+	@printf "    [LIBN_AUDIO AR] $<\n"
 	$(AR) rcs -o $@ $(LIBNAUDIO_O_FILES)
 
 #$(BUILD_DIR)/libultra.a: $(O_FILES)
