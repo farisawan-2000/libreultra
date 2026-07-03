@@ -204,7 +204,7 @@ $(BUILD_DIR)/%.o: %.c
 
 $(BUILD_DIR)/%.o: %.s
 	@printf "    [LIBULTRA:AS] $<\n"
-	$(V)$(AS) $(ASFLAGS) -o $@ $< &>/dev/null
+	$(V)$(AS) $(ASFLAGS) -o $@ $< 2> /dev/null
 	$(V)$(PYTHON) tools/set_o32abi_bit.py $@
 
 $(BUILD_DIR)/libultra_rom.a: $(O_FILES)
